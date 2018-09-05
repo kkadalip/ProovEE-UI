@@ -1,6 +1,16 @@
 import React, {Component} from 'react';
 import logo from './logo.svg';
 import './App.css';
+import {DataTable} from 'primereact/datatable';
+import {Column} from 'primereact/column';
+//import {ColumnGroup} from 'primereact/columngroup';
+import {WeatherService} from './service/WeatherService';
+
+import {Button} from 'primereact/button';
+
+import 'primereact/resources/themes/nova-light/theme.css';
+import 'primereact/resources/primereact.min.css';
+import 'primeicons/primeicons.css';
 
 class App extends Component {
     constructor(props) {
@@ -13,103 +23,61 @@ class App extends Component {
         console.log("constructor END");
     }
 
-    loadData() {
-        console.log("LOAD DATA START");
-
-        function convertToStation(data) {
-            return null; // TODO
-        }
-
-        fetch('http://localhost:8090/stations')
-            .then(response => response.json())
-            .then(data => {
-                console.log("data is " + JSON.stringify(data));
-                console.log("data 0 is " + JSON.stringify(data[0]));
-                let result = data[0].stations.map((s) => {
-                    return (
-                        <tr key={s.id}>
-                            <td>{s.id}</td>
-                            <td>{s.name}</td>
-                            <td>{s.wmoCode}</td>
-                            <td>{s.longitude}</td>
-                            <td>{s.latitude}</td>
-                            <td>{s.phenomenon}</td>
-                            <td>{s.visibility}</td>
-                            <td>{s.precipitations}</td>
-                            <td>{s.airPressure}</td>
-                            <td>{s.relativeHumidity}</td>
-                            <td>{s.airTemperature}</td>
-                            <td>{s.windDirection}</td>
-                            <td>{s.windSpeed}</td>
-                            <td>{s.windSpeedMax}</td>
-                            <td>{s.waterLevel}</td>
-                            <td>{s.waterLevelEh2000}</td>
-                            <td>{s.waterTemperature}</td>
-                            <td>{s.uvIndex}</td>
-                            <td>{s.windChillC}</td>
-                            <td>{s.windChillF}</td>
-                            <td>{s.windChillMaxC}</td>
-                            <td>{s.windChillMaxF}</td>
-                        </tr>
-                    )
-                });
-                this.setState({
-                    loading: false,
-                    data: result
-                });
-            });
-        console.log("LOAD DATA END");
-    }
-
     componentDidMount() {
         console.log("componentDidMount START");
-        this.loadData();
+        WeatherService.getStations().then(data => this.setState({loading: false, stations: data}));
         console.log("componentDidMount END ");
     }
 
     render() {
-        console.log("RENDER START"); // + this.state.stations
-        console.log("state is: " + JSON.stringify(this.state));
+        console.log("RENDER START");
+        //console.log("State is: " + JSON.stringify(this.state));
+        let cols = [
+            {field: 'id', header: 'ID'},
+            {field: 'name', header: 'Name'},
+            {field: 'wmoCode', header: 'WMO code'},
+            {field: 'longitude', header: 'Longitute'},
+            {field: 'latitude', header: 'Latitude'},
+            {field: 'phenomenon', header: 'Phenomenon'},
+            {field: 'visibility', header: 'Visibility'},
+            {field: 'precipitations', header: 'Precipitations'},
+            {field: 'airPressure', header: 'Air pressure'},
+            {field: 'relativeHumidity', header: 'Relative humidity'},
+            {field: 'airTemperature', header: 'Air temperature'},
+            {field: 'windDirection', header: 'Wind direction'},
+            {field: 'windSpeed', header: 'Wind speed'},
+            {field: 'windSpeedMax', header: 'Wind speed max'},
+            {field: 'waterLevel', header: 'Water level'},
+            {field: 'waterLevelEh2000', header: 'Water level EH2000'},
+            {field: 'waterTemperature', header: 'Water temperature'},
+            {field: 'uvIndex', header: 'UV index'},
+            {field: 'windChillC', header: 'Wind chill C'},
+            {field: 'windChillF', header: 'Wind chill F'},
+            {field: 'windChillMaxC', header: 'Wind chill Max C'},
+            {field: 'windChillMaxF', header: 'Wind chill Max F'}
+        ];
+        let dynamicColumns = cols.map((col, i) => {
+            return <Column key={col.field} field={col.field} header={col.header} sortable="true"/>;
+        });
+        const isLoading = this.state.loading;
+        console.log("isloading " + isLoading);
+
+        const header = "Example header";
+        const footer = "Example footer";
+
         return (
             <div className="App">
                 <header className="App-header">
                     <img src={logo} className="App-logo" alt="logo"/>
                     <h1 className="App-title">Welcome</h1>
                 </header>
-                <p className="App-intro">
-                    Weather stations:
-                </p>
-                <table border="1">
-                    <thead>
-                    <tr>
-                        <td>ID</td>
-                        <td>Name</td>
-                        <td>WMO code</td>
-                        <td>Longitute</td>
-                        <td>Latitude</td>
-                        <td>Phenomenon</td>
-                        <td>Visibility</td>
-                        <td>Precipitations</td>
-                        <td>Air pressure</td>
-                        <td>Relative humidity</td>
-                        <td>Air temperature</td>
-                        <td>Wind direction</td>
-                        <td>Wind speed</td>
-                        <td>Wind speed max</td>
-                        <td>Water level</td>
-                        <td>Water level EH2000</td>
-                        <td>Water temperature</td>
-                        <td>UV index</td>
-                        <td>Wind chill C</td>
-                        <td>Wind chill F</td>
-                        <td>Wind chill Max C</td>
-                        <td>Wind chill Max F</td>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {this.state.data}
-                    </tbody>
-                </table>
+                <div hidden={isLoading}>
+                    <h3>Dynamic Columns</h3>
+                    <DataTable value={this.state.stations} header={header} footer={footer}>
+                        {dynamicColumns}
+                    </DataTable>
+                </div>
+                <Button label="Do something"/>
             </div>
         );
     }
