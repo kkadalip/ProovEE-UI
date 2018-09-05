@@ -27,7 +27,7 @@ class App extends Component {
                 console.log("data 0 is " + JSON.stringify(data[0]));
                 let result = data[0].stations.map((s) => {
                     return (
-                        <tr>
+                        <tr key={s.id}>
                             <td>{s.id}</td>
                             <td>{s.name}</td>
                             <td>{s.wmoCode}</td>
@@ -39,13 +39,17 @@ class App extends Component {
                             <td>{s.airPressure}</td>
                             <td>{s.relativeHumidity}</td>
                             <td>{s.airTemperature}</td>
-                            <td>{s.winDdirection}</td>
+                            <td>{s.windDirection}</td>
                             <td>{s.windSpeed}</td>
                             <td>{s.windSpeedMax}</td>
                             <td>{s.waterLevel}</td>
                             <td>{s.waterLevelEh2000}</td>
                             <td>{s.waterTemperature}</td>
                             <td>{s.uvIndex}</td>
+                            <td>{s.windChillC}</td>
+                            <td>{s.windChillF}</td>
+                            <td>{s.windChillMaxC}</td>
+                            <td>{s.windChillMaxF}</td>
                         </tr>
                     )
                 });
@@ -77,24 +81,30 @@ class App extends Component {
                 </p>
                 <table border="1">
                     <thead>
-                    <td>ID</td>
-                    <td>Name</td>
-                    <td>WMO code</td>
-                    <td>Longitute</td>
-                    <td>Latitude</td>
-                    <td>Phenomenon</td>
-                    <td>Visibility</td>
-                    <td>Precipitations</td>
-                    <td>Air pressure</td>
-                    <td>Relative humidity</td>
-                    <td>Air temperature</td>
-                    <td>Wind direction</td>
-                    <td>Wind speed</td>
-                    <td>Wind speed max</td>
-                    <td>Water level</td>
-                    <td>Water level EH2000</td>
-                    <td>Water temperature</td>
-                    <td>UV index</td>
+                    <tr>
+                        <td>ID</td>
+                        <td>Name</td>
+                        <td>WMO code</td>
+                        <td>Longitute</td>
+                        <td>Latitude</td>
+                        <td>Phenomenon</td>
+                        <td>Visibility</td>
+                        <td>Precipitations</td>
+                        <td>Air pressure</td>
+                        <td>Relative humidity</td>
+                        <td>Air temperature</td>
+                        <td>Wind direction</td>
+                        <td>Wind speed</td>
+                        <td>Wind speed max</td>
+                        <td>Water level</td>
+                        <td>Water level EH2000</td>
+                        <td>Water temperature</td>
+                        <td>UV index</td>
+                        <td>Wind chill C</td>
+                        <td>Wind chill F</td>
+                        <td>Wind chill Max C</td>
+                        <td>Wind chill Max F</td>
+                    </tr>
                     </thead>
                     <tbody>
                     {this.state.data}
