@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import logo from './logo.svg';
+//import logo from './logo.svg';
 import './App.css';
 import 'primereact/resources/themes/nova-light/theme.css';
 import 'primereact/resources/primereact.min.css';
@@ -9,7 +9,7 @@ import {Column} from 'primereact/column';
 import {ColumnGroup} from 'primereact/columngroup';
 import {Row} from 'primereact/row';
 import {WeatherService} from './service/WeatherService';
-import {Button} from 'primereact/button';
+import {ProgressSpinner} from 'primereact/progressspinner';
 
 class App extends Component {
     constructor(props) {
@@ -33,22 +33,22 @@ class App extends Component {
         //console.log("State is: " + JSON.stringify(this.state));
         const isLoading = this.state.loading;
         console.log("isloading " + isLoading);
-        
+
         let headerRow = <Row>
             <Column key={'name'} field={'name'} header={'Name'} sortable="true"/>
             <Column key={'longitude'} field={'longitude'} header={'Longitute'} sortable="true"/>
             <Column key={'latitude'} field={'latitude'} header={'Latitude'} sortable="true"/>
             <Column key={'phenomenon'} field={'phenomenon'} header={'Phenomenon'} sortable="true"/>
-            <Column key={'visibility'} field={'visibility'} header={'Visibility'} sortable="true"/>
+            <Column key={'visibility'} field={'visibility'} header={'Visibility (km)'} sortable="true"/>
             <Column key={'precipitations'} field={'precipitations'} header={'Precipitations'} sortable="true"/>
             <Column key={'uvIndex'} field={'uvIndex'} header={'UV index'} sortable="true"/>
             <Column key={'wmoCode'} field={'wmoCode'} header={'WMO code'} sortable="true"/>
-            <Column key={'airPressure'} field={'airPressure'} header={'Pressure'} sortable="true"/>
-            <Column key={'relativeHumidity'} field={'relativeHumidity'} header={'Relative humidity'} sortable="true"/>
-            <Column key={'airTemperature'} field={'airTemperature'} header={'Temperature'} sortable="true"/>
-            <Column key={'waterLevel'} field={'waterLevel'} header={'Level'} sortable="true"/>
-            <Column key={'waterLevelEh2000'} field={'waterLevelEh2000'} header={'Level EH2000'} sortable="true"/>
-            <Column key={'waterTemperature'} field={'waterTemperature'} header={'Temp (C)'} sortable="true"/>
+            <Column key={'airPressure'} field={'airPressure'} header={'Pressure (hPa)'} sortable="true"/>
+            <Column key={'relativeHumidity'} field={'relativeHumidity'} header={'Relative humidity (%)'} sortable="true"/>
+            <Column key={'airTemperature'} field={'airTemperature'} header={'Temperature (°C)'} sortable="true"/>
+            <Column key={'waterLevel'} field={'waterLevel'} header={'Level (cm)'} sortable="true"/>
+            <Column key={'waterLevelEh2000'} field={'waterLevelEh2000'} header={'Level EH2000 (cm)'} sortable="true"/>
+            <Column key={'waterTemperature'} field={'waterTemperature'} header={'Temp (°C)'} sortable="true"/>
             <Column key={'windDirection'} field={'windDirection'} header={'Direction'} sortable="true"/>
             <Column key={'windSpeed'} field={'windSpeed'} header={'Speed (m/s)'} sortable="true"/>
             <Column key={'windSpeedMax'} field={'windSpeedMax'} header={'Speed max'} sortable="true"/>
@@ -74,35 +74,35 @@ class App extends Component {
         let footerGroup =
             <ColumnGroup>
                 <Row>
-                    <Column footer="Averages:" colSpan={3}/>
-                    <Column footer="~TODO1"/>
-                    <Column footer="~TODO2..."/>
+                    <Column footer="Averages:" colSpan={1}/>
+                    <Column footer="TODO" colSpan={20}/>
                 </Row>
             </ColumnGroup>;
 
         let dataTable =
-            <DataTable value={this.state.stations} resizableColumns={true} headerColumnGroup={headerGroup} footerColumnGroup={footerGroup}>
-                <Column key={'name'} field={'name'} header={'Name'} />
-                <Column key={'longitude'} field={'longitude'} />
-                <Column key={'latitude'} field={'latitude'} />
-                <Column key={'phenomenon'} field={'phenomenon'} />
-                <Column key={'visibility'} field={'visibility'} />
-                <Column key={'precipitations'} field={'precipitations'} />
-                <Column key={'uvIndex'} field={'uvIndex'} />
-                <Column key={'wmoCode'} field={'wmoCode'} />
-                <Column key={'airPressure'} field={'airPressure'} />
-                <Column key={'relativeHumidity'} field={'relativeHumidity'} />
+            <DataTable value={this.state.stations} resizableColumns={true} headerColumnGroup={headerGroup} footerColumnGroup={footerGroup}
+                       scrollable={true} scrollHeight="400px" emptyMessage={"No data found, try again later."}>
+                <Column key={'name'} field={'name'} header={'Name'}/>
+                <Column key={'longitude'} field={'longitude'}/>
+                <Column key={'latitude'} field={'latitude'}/>
+                <Column key={'phenomenon'} field={'phenomenon'}/>
+                <Column key={'visibility'} field={'visibility'}/>
+                <Column key={'precipitations'} field={'precipitations'}/>
+                <Column key={'uvIndex'} field={'uvIndex'}/>
+                <Column key={'wmoCode'} field={'wmoCode'}/>
+                <Column key={'airPressure'} field={'airPressure'}/>
+                <Column key={'relativeHumidity'} field={'relativeHumidity'}/>
                 <Column key={'airTemperature'} field={'airTemperature'} style={{fontWeight: "bold"}}/>
-                <Column key={'waterLevel'} field={'waterLevel'} />
-                <Column key={'waterLevelEh2000'} field={'waterLevelEh2000'} />
-                <Column key={'waterTemperature'} field={'waterTemperature'} />
-                <Column key={'windDirection'} field={'windDirection'} />
+                <Column key={'waterLevel'} field={'waterLevel'}/>
+                <Column key={'waterLevelEh2000'} field={'waterLevelEh2000'}/>
+                <Column key={'waterTemperature'} field={'waterTemperature'}/>
+                <Column key={'windDirection'} field={'windDirection'}/>
                 <Column key={'windSpeed'} field={'windSpeed'} style={{fontWeight: "bold"}}/>
-                <Column key={'windSpeedMax'} field={'windSpeedMax'} />
+                <Column key={'windSpeedMax'} field={'windSpeedMax'}/>
                 <Column key={'windChillC'} field={'windChillC'} style={{fontWeight: "bold"}}/>
-                <Column key={'windChillF'} field={'windChillF'} />
-                <Column key={'windChillMaxC'} field={'windChillMaxC'} />
-                <Column key={'windChillMaxF'} field={'windChillMaxF'} />
+                <Column key={'windChillF'} field={'windChillF'}/>
+                <Column key={'windChillMaxC'} field={'windChillMaxC'}/>
+                <Column key={'windChillMaxF'} field={'windChillMaxF'}/>
             </DataTable>;
 
         return (
@@ -110,10 +110,12 @@ class App extends Component {
                 <header className="App-header">
                     <h1 className="App-title">Estonian weather stations</h1>
                 </header>
+                <div hidden={!isLoading}>
+                    <ProgressSpinner/>
+                </div>
                 <div hidden={isLoading}>
                     {dataTable}
                 </div>
-                <Button label="Do something"/>
             </div>
         );
     }
