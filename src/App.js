@@ -82,7 +82,7 @@ class App extends Component {
         let dataTable =
             <DataTable value={this.state.stations} resizableColumns={true} headerColumnGroup={headerGroup} footerColumnGroup={footerGroup}
                        scrollable={true} scrollHeight="400px" emptyMessage={"No data found, try again later."}>
-                <Column key={'name'} field={'name'} header={'Name'}/>
+                <Column key={'name'} field={'name'}/>
                 <Column key={'longitude'} field={'longitude'}/>
                 <Column key={'latitude'} field={'latitude'}/>
                 <Column key={'phenomenon'} field={'phenomenon'}/>
@@ -104,6 +104,40 @@ class App extends Component {
                 <Column key={'windChillMaxC'} field={'windChillMaxC'}/>
                 <Column key={'windChillMaxF'} field={'windChillMaxF'}/>
             </DataTable>;
+
+        // https://erikflowers.github.io/weather-icons/
+        var weatherIconArray = {
+            "Clear": ["wi-day-sunny", "wi-na", "wi-na"],
+            "Few clouds": ["wi-day-cloudy", "wi-na", "wi-na"],
+            "Variable clouds": ["wi-cloud-refresh", "wi-cloud-refresh", "wi-cloud-refresh"],
+            "Cloudy with clear spells": "",
+            "Overcast": ["wi-day-sunny-overcast", "wi-cloudy", "wi-night-alt-cloudy"],
+            "Light snow shower": ["wi-na", "wi-na", "wi-na"],
+            "Moderate snow shower": ["wi-na", "wi-na", "wi-na"],
+            "Heavy snow shower": ["wi-na", "wi-na", "wi-na"],
+            "Light shower": ["wi-na", "wi-na", "wi-na"],
+            "Moderate shower": ["wi-na", "wi-na", "wi-na"],
+            "Heavy shower": ["wi-na", "wi-na", "wi-na"],
+            "Light rain": ["wi-raindrop", "wi-raindrop", "wi-raindrop"],
+            "Moderate rain": ["wi-raindrops", "wi-raindrops", "wi-raindrops"],
+            "Heavy rain": ["wi-rain", "wi-rain", "wi-rain"],
+            "Glaze": ["wi-na", "wi-na", "wi-na"],
+            "Light sleet": ["wi-day-sleet", "wi-sleet", "wi-night-alt-sleet"],
+            "Moderate sleet": ["wi-na", "wi-na", "wi-na"],
+            "Light snowfall": ["wi-na", "wi-na", "wi-na"],
+            "Moderate snowfall": ["wi-na", "wi-na", "wi-na"],
+            "Heavy snowfall": ["wi-na", "wi-na", "wi-na"],
+            "Blowing snow": ["wi-na", "wi-na", "wi-na"],
+            "Drifting snow": ["wi-na", "wi-na", "wi-na"],
+            "Hail": ["wi-day-hail", "wi-hail", "wi-night-alt-hail"],
+            "Mist": ["wi-day-fog", "wi-fog", "wi-night-fog"],
+            "Fog": ["wi-day-fog", "wi-fog", "wi-night-fog"],
+            "Thunder": ["wi-day-lightning", "wi-lightning", "wi-night-alt-lightning"],
+            "Thunderstorm": ["wi-day-thunderstorm", "wi-thunderstorm", "wi-night-alt-thunderstorm"]
+        };
+        for (const key in weatherIconArray) {
+            console.log("key " + key + " DAY: " + weatherIconArray[key][0] + " NEUTRAL: " + weatherIconArray[key][1] + " NIGHT: " + weatherIconArray[key][2]);
+        }
 
         return (
             <div className="App">
