@@ -9,6 +9,7 @@
     "primereact": "^2.0.0-beta.3",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
+    "react-i18next": "^7.11.1",
     "react-icons-weather": "^1.0.5",
     "react-scripts": "1.1.5",
     "react-transition-group": "^2.4.0",
