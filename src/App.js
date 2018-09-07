@@ -11,28 +11,35 @@ import {Row} from 'primereact/row';
 import {WeatherService} from './service/WeatherService';
 import {ProgressSpinner} from 'primereact/progressspinner';
 
+import {translate} from 'react-i18next'; // I18n, // var I18n = require('react-native-i18n');
+import i18n from './translations/i18n';
+
+const debug = false;
+const debugMax = false;
+
 class App extends Component {
     constructor(props) {
-        console.log("constructor START");
+        if (debug) console.log("constructor START");
         super(props);
         this.state = {
             loading: true,
             data: []
         };
-        console.log("constructor END");
+        translate.setI18n(i18n);
+        if (debug) console.log("constructor END");
     }
 
     componentDidMount() {
-        console.log("componentDidMount START");
+        if (debug) console.log("componentDidMount START");
         WeatherService.getStations().then(data => this.setState({loading: false, stations: data}));
-        console.log("componentDidMount END ");
+        if (debug) console.log("componentDidMount END ");
     }
 
     render() {
-        console.log("RENDER START");
-        //console.log("State is: " + JSON.stringify(this.state));
+        if (debug) console.log("RENDER START");
+        if (debug && debugMax) console.log("State is: " + JSON.stringify(this.state));
         const isLoading = this.state.loading;
-        console.log("isloading " + isLoading);
+        if (debug) console.log("isloading " + isLoading);
 
         let headerRow = <Row>
             <Column key={'name'} field={'name'} header={'Name'} sortable="true"/>
@@ -104,9 +111,8 @@ class App extends Component {
                 <Column key={'windChillMaxC'} field={'windChillMaxC'}/>
                 <Column key={'windChillMaxF'} field={'windChillMaxF'}/>
             </DataTable>;
-
-        // https://erikflowers.github.io/weather-icons/
-        var weatherIconArray = {
+                
+        const weatherIconArray = {
             "Clear": ["wi-day-sunny", "wi-na", "wi-na"],
             "Few clouds": ["wi-day-cloudy", "wi-na", "wi-na"],
             "Variable clouds": ["wi-cloud-refresh", "wi-cloud-refresh", "wi-cloud-refresh"],
@@ -136,23 +142,41 @@ class App extends Component {
             "Thunderstorm": ["wi-day-thunderstorm", "wi-thunderstorm", "wi-night-alt-thunderstorm"]
         };
         for (const key in weatherIconArray) {
-            console.log("key " + key + " DAY: " + weatherIconArray[key][0] + " NEUTRAL: " + weatherIconArray[key][1] + " NIGHT: " + weatherIconArray[key][2]);
+            if (debug && debugMax) console.log("key " + key + " DAY: " + weatherIconArray[key][0] + " NEUTRAL: " + weatherIconArray[key][1] + " NIGHT: " + weatherIconArray[key][2]);
         }
+
+        // i18n.changeLanguage('et', (err, t) => {
+        //     if (err) return console.log('something went wrong loading', err);
+        //     t('key'); // -> same as i18next.t
+        // });
+
+        const {t, i18n} = this.props;
+
+        const changeLanguage = (lng) => {
+            i18n.changeLanguage(lng);
+        };
 
         return (
             <div className="App">
                 <header className="App-header">
                     <h1 className="App-title">Estonian weather stations</h1>
                 </header>
+                <button onClick={() => changeLanguage('et')}>et</button>
+                <button onClick={() => changeLanguage('en')}>en</button>
                 <div hidden={!isLoading}>
                     <ProgressSpinner/>
                 </div>
                 <div hidden={isLoading}>
                     {dataTable}
+                    <div>nnnn {t('station.max.wmoCode')}</div>
+                    <div>nnnn {t('station.full.wmoCode')}</div>
+                    <div>nnnn {t('station.min.wmoCode')}</div>
+                    <div>nnnn {t('station.full.waterTemperature')}</div>
                 </div>
             </div>
         );
     }
 }
 
-export default App;
+//export default App;
+export default translate('translations')(App);
