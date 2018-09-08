@@ -27,6 +27,11 @@ function getTabs() {
 class App extends Component {
     constructor(props) {
         super(props);
+
+        const lng = localStorage.getItem('SelectedLanguage') || 'en';
+        i18n.changeLanguage(lng);
+        
+        console.log("i18n language is " + i18n.language);
         this.state = {
             loading: true,
             data: [],
@@ -150,7 +155,8 @@ class App extends Component {
         const {t, i18n} = this.props;
         const changeLanguage = (lng) => {
             i18n.changeLanguage(lng);
-            this.state.tabs = getTabs();
+            this.setState({tabs: getTabs()});
+            localStorage.setItem('SelectedLanguage', lng);
         };
         const langSelectItems = [
             {label: 'English', value: 'en'},
