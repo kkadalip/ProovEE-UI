@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import './App.css';
 import 'primereact/resources/themes/nova-light/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
@@ -150,9 +149,8 @@ class App extends Component {
 
                 <div className="floating-box-container">
                     <div id="floating-box-main" className="floating-box">
-
-                        <header className="App-header">
-                            <h1 className="App-title">Estonian weather stations</h1>
+                        <header>
+                            <p className="unselectable title-big">Estonian weather stations</p>
                         </header>
                         <SelectButton value={i18n.language} options={langSelectItems} onChange={(e) => changeLanguage(e.value)}/>
                         <div hidden={!isLoading}>

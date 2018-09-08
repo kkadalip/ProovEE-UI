@@ -1,5 +1,6 @@
 * {
     font-family: Lato, 'Helvetica Neue', Arial, Helvetica, sans-serif;
+    text-align: center;
 }
 
 body {
@@ -13,6 +14,24 @@ body .p-selectbutton .p-button.p-highlight {
     background-color: red;
 }
 
+.unselectable {
+    -webkit-user-select: none; /* Chrome/Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+ */
+    /* Rules below not implemented in browsers yet */
+    -o-user-select: none;
+    user-select: none;
+}
+
+.title-big {
+    background-color: rgb(61, 61, 61);
+    color: white;
+    padding: 20px 10px;
+    margin: 0 0 34px 0;
+    font-size: 1.5em;
+    font-weight: bolder;
+}
+
 .floating-box-container {
     text-align: center;
 }
@@ -20,7 +39,7 @@ body .p-selectbutton .p-button.p-highlight {
 .floating-box {
     display: inline-block;
     background: rgb(255, 255, 255);
-    box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.2);
     padding-left: 20px;
     padding-right: 20px;
 }
@@ -35,6 +54,12 @@ body .p-selectbutton .p-button.p-highlight {
 }
 
 #floating-box-main {
-    padding: 0 0 25px 0;
-    margin: 5px 10px;
+    padding: 0 0 5px 0;
+    margin: 30px 10px 5px 10px;
+}
+
+/* weather icons */
+.icon-wrap .icon,
+.icon-wrap .wi {
+    font-size: 80px;
 }
