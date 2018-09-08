@@ -6,7 +6,7 @@ import {reactI18nextModule} from 'react-i18next';
 import common_en from "./en.json";
 import common_et from "./et.json";
 
-const debug = true; // TODO turn off for live
+const debug = false; // TURN OFF IN LIVE!
 
 i18n
 //.use(Backend)
@@ -43,6 +43,6 @@ i18n
             et: {
                 translations: common_et
             },
-        },
+        }
     });
 export default i18n

@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-//import logo from './logo.svg';
 import './App.css';
 import 'primereact/resources/themes/nova-light/theme.css';
 import 'primereact/resources/primereact.min.css';
@@ -10,37 +9,29 @@ import {ColumnGroup} from 'primereact/columngroup';
 import {Row} from 'primereact/row';
 import {WeatherService} from './service/WeatherService';
 import {ProgressSpinner} from 'primereact/progressspinner';
-
-import {translate} from 'react-i18next'; // I18n, // var I18n = require('react-native-i18n');
+import {SelectButton} from 'primereact/selectbutton';
+import {translate} from 'react-i18next';
 import i18n from './translations/i18n';
 
 const debug = false;
-const debugMax = false;
 
 class App extends Component {
     constructor(props) {
-        if (debug) console.log("constructor START");
         super(props);
         this.state = {
             loading: true,
             data: []
         };
         translate.setI18n(i18n);
-        if (debug) console.log("constructor END");
     }
 
     componentDidMount() {
-        if (debug) console.log("componentDidMount START");
         WeatherService.getStations().then(data => this.setState({loading: false, stations: data}));
-        if (debug) console.log("componentDidMount END ");
     }
 
     render() {
-        if (debug) console.log("RENDER START");
-        if (debug && debugMax) console.log("State is: " + JSON.stringify(this.state));
+        if (debug) console.log("State is: " + JSON.stringify(this.state));
         const isLoading = this.state.loading;
-        if (debug) console.log("isloading " + isLoading);
-
         let headerRow = <Row>
             <Column key={'name'} field={'name'} header={'Name'} sortable="true"/>
             <Column key={'longitude'} field={'longitude'} header={'Longitute'} sortable="true"/>
@@ -111,7 +102,7 @@ class App extends Component {
                 <Column key={'windChillMaxC'} field={'windChillMaxC'}/>
                 <Column key={'windChillMaxF'} field={'windChillMaxF'}/>
             </DataTable>;
-                
+
         const weatherIconArray = {
             "Clear": ["wi-day-sunny", "wi-na", "wi-na"],
             "Few clouds": ["wi-day-cloudy", "wi-na", "wi-na"],
@@ -141,38 +132,48 @@ class App extends Component {
             "Thunder": ["wi-day-lightning", "wi-lightning", "wi-night-alt-lightning"],
             "Thunderstorm": ["wi-day-thunderstorm", "wi-thunderstorm", "wi-night-alt-thunderstorm"]
         };
-        for (const key in weatherIconArray) {
-            if (debug && debugMax) console.log("key " + key + " DAY: " + weatherIconArray[key][0] + " NEUTRAL: " + weatherIconArray[key][1] + " NIGHT: " + weatherIconArray[key][2]);
+        if (debug) {
+            for (const key in weatherIconArray) {
+                console.log("key " + key + " DAY: " + weatherIconArray[key][0] + " NEUTRAL: " + weatherIconArray[key][1] + " NIGHT: " + weatherIconArray[key][2]);
+            }
         }
-
-        // i18n.changeLanguage('et', (err, t) => {
-        //     if (err) return console.log('something went wrong loading', err);
-        //     t('key'); // -> same as i18next.t
-        // });
-
         const {t, i18n} = this.props;
-
         const changeLanguage = (lng) => {
             i18n.changeLanguage(lng);
         };
-
+        const langSelectItems = [
+            {label: 'English', value: 'en'},
+            {label: 'Eesti', value: 'et'}
+        ];
         return (
             <div className="App">
-                <header className="App-header">
-                    <h1 className="App-title">Estonian weather stations</h1>
-                </header>
-                <button onClick={() => changeLanguage('et')}>et</button>
-                <button onClick={() => changeLanguage('en')}>en</button>
-                <div hidden={!isLoading}>
-                    <ProgressSpinner/>
+
+                <div className="floating-box-container">
+                    <div id="floating-box-main" className="floating-box">
+
+                        <header className="App-header">
+                            <h1 className="App-title">Estonian weather stations</h1>
+                        </header>
+                        <SelectButton value={i18n.language} options={langSelectItems} onChange={(e) => changeLanguage(e.value)}/>
+                        <div hidden={!isLoading}>
+                            <ProgressSpinner/>
+                        </div>
+                        <div hidden={isLoading}>
+                            {dataTable}
+                            <div>nnnn {t('station.max.wmoCode')}</div>
+                            <div>nnnn {t('station.full.wmoCode')}</div>
+                            <div>nnnn {t('station.min.wmoCode')}</div>
+                            <div>nnnn {t('station.full.waterTemperature')}</div>
+
+
+                            <i className="pi pi-check"/>
+                            <i className="pi pi-times"/>
+                            <i className="pi pi-check" style={{fontSize: "3em"}}>asd</i>
+                        </div>
+
+                    </div>
                 </div>
-                <div hidden={isLoading}>
-                    {dataTable}
-                    <div>nnnn {t('station.max.wmoCode')}</div>
-                    <div>nnnn {t('station.full.wmoCode')}</div>
-                    <div>nnnn {t('station.min.wmoCode')}</div>
-                    <div>nnnn {t('station.full.waterTemperature')}</div>
-                </div>
+
             </div>
         );
     }

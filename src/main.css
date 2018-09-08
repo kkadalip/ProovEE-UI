@@ -1,0 +1,40 @@
+* {
+    font-family: Lato, 'Helvetica Neue', Arial, Helvetica, sans-serif;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: rgb(239, 239, 239);
+    color: rgb(0, 0, 0);
+}
+
+body .p-selectbutton .p-button.p-highlight {
+    background-color: red;
+}
+
+.floating-box-container {
+    text-align: center;
+}
+
+.floating-box {
+    display: inline-block;
+    background: rgb(255, 255, 255);
+    box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.2);
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+#floating-box-top {
+    margin: 20px 10px 5px 10px;
+    font-size: 22px;
+}
+
+#floating-box-top p {
+    margin: 10px;
+}
+
+#floating-box-main {
+    padding: 0 0 25px 0;
+    margin: 5px 10px;
+}

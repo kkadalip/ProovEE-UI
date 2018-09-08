@@ -23,6 +23,7 @@ TODO
 
 ######UI:
 * PrimeReact <a>https://www.primefaces.org/primereact
+* Primeicons (included with PrimeReact) https://www.primefaces.org/primeng/#/icons
 * reactstrap https://reactstrap.github.io/
 
 ######Translations:
@@ -33,4 +34,4 @@ TODO
 * axios https://github.com/axios/axios
 
 ######Weather icons
-* react-icons-weather https://www.npmjs.com/package/react-icons-weather (based on https://erikflowers.github.io/weather-icons/)
+* react-icons-weather https://www.npmjs.com/package/react-icons-weather (based on: https://erikflowers.github.io/weather-icons/)
