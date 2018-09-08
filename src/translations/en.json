@@ -1,4 +1,14 @@
 {
+  "title": {
+    "main": "Estonian weather stations"
+  },
+  "tabs": {
+    "home": "Home",
+    "maps": "Google maps",
+    "statistics": "Statistics",
+    "info": "Info",
+    "settings": "Settings"
+  },
   "station": {
     "max": {
       "name": "Name",

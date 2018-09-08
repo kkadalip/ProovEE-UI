@@ -23,11 +23,8 @@ TODO
 
 ###### UI:
 * PrimeReact <a>https://www.primefaces.org/primereact
-* Primeicons (included with PrimeReact) https://www.primefaces.org/primeng/#/icons
+* Primeicons (included with PrimeReact, examples at: https://www.primefaces.org/primeng/#/icons) 
 * reactstrap https://reactstrap.github.io/
-
-#### Helpful guides
-* ReactStrap components - https://reactstrap.github.io/components/
 
 ###### Translations:
 * i18next https://www.i18next.com/
@@ -38,3 +35,8 @@ TODO
 
 ###### Weather icons
 * react-icons-weather https://www.npmjs.com/package/react-icons-weather (based on: https://erikflowers.github.io/weather-icons/)
+
+##### Useful guides
+* https://reactjs.org/docs/getting-started.html
+* https://github.com/facebook/create-react-app
+* ReactStrap components - https://reactstrap.github.io/components/

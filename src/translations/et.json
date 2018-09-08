@@ -1,4 +1,14 @@
 {
+  "title": {
+    "main": "Eesti ilmajaamad"
+  },
+  "tabs": {
+    "home": "Avaleht",
+    "maps": "Google kaart",
+    "statistics": "Statistika",
+    "info": "Info",
+    "settings": "Seaded"
+  },
   "station": {
     "max": {
       "name": "Jaama nimi",

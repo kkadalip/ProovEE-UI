@@ -9,17 +9,28 @@ import {Row} from 'primereact/row';
 import {WeatherService} from './service/WeatherService';
 import {ProgressSpinner} from 'primereact/progressspinner';
 import {SelectButton} from 'primereact/selectbutton';
+import {TabMenu} from 'primereact/tabmenu';
 import {translate} from 'react-i18next';
 import i18n from './translations/i18n';
 
 const debug = false;
+
+function getTabs() {
+    return [
+        {label: i18n.t('tabs.home'), icon: 'pi pi-fw pi-home'},
+        {label: i18n.t('tabs.maps'), icon: 'pi pi-fw pi-globe', disabled: "true"},
+        {label: i18n.t('tabs.statistics'), icon: 'pi pi-fw pi-pencil', disabled: "true"},
+        {label: i18n.t('tabs.info'), icon: 'pi pi-fw pi-info', disabled: "true"},
+        {label: i18n.t('tabs.settings'), icon: 'pi pi-fw pi-cog', disabled: "true"}];
+}
 
 class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
             loading: true,
-            data: []
+            data: [],
+            tabs: getTabs()
         };
         translate.setI18n(i18n);
     }
@@ -139,6 +150,7 @@ class App extends Component {
         const {t, i18n} = this.props;
         const changeLanguage = (lng) => {
             i18n.changeLanguage(lng);
+            this.state.tabs = getTabs();
         };
         const langSelectItems = [
             {label: 'English', value: 'en'},
@@ -146,36 +158,25 @@ class App extends Component {
         ];
         return (
             <div className="App">
-
-                <div className="floating-box-container">
-                    <div id="floating-box-main" className="floating-box">
+                <SelectButton value={i18n.language} options={langSelectItems} onChange={(e) => changeLanguage(e.value)} style={{float: "right"}}/>
+                <div id="floating-box-main" className="floating-box">
+                    <TabMenu id={"navigation-tabs"} model={this.state.tabs} activeItem={this.state.activeItem}
+                             onTabChange={(e) => this.setState({activeItem: e.value})}/>
+                    <div className={"title-and-main"}>
                         <header>
-                            <p className="unselectable title-big">Estonian weather stations</p>
+                            <p className="unselectable title-big">{t('title.main')}</p>
                         </header>
-                        <SelectButton value={i18n.language} options={langSelectItems} onChange={(e) => changeLanguage(e.value)}/>
                         <div hidden={!isLoading}>
                             <ProgressSpinner/>
                         </div>
                         <div hidden={isLoading}>
                             {dataTable}
-                            <div>nnnn {t('station.max.wmoCode')}</div>
-                            <div>nnnn {t('station.full.wmoCode')}</div>
-                            <div>nnnn {t('station.min.wmoCode')}</div>
-                            <div>nnnn {t('station.full.waterTemperature')}</div>
-
-
-                            <i className="pi pi-check"/>
-                            <i className="pi pi-times"/>
-                            <i className="pi pi-check" style={{fontSize: "3em"}}>asd</i>
                         </div>
-
                     </div>
                 </div>
-
             </div>
         );
     }
 }
 
-//export default App;
 export default translate('translations')(App);

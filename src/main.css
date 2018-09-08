@@ -32,14 +32,8 @@ body .p-selectbutton .p-button.p-highlight {
     font-weight: bolder;
 }
 
-.floating-box-container {
-    text-align: center;
-}
-
 .floating-box {
     display: inline-block;
-    background: rgb(255, 255, 255);
-    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.2);
     padding-left: 20px;
     padding-right: 20px;
 }
@@ -54,8 +48,18 @@ body .p-selectbutton .p-button.p-highlight {
 }
 
 #floating-box-main {
+    text-align: center;
     padding: 0 0 5px 0;
-    margin: 30px 10px 5px 10px;
+    margin: 20px 30px 25px 30px;
+}
+
+#navigation-tabs {
+    margin: 0;
+}
+
+.title-and-main {
+    background: rgb(255, 255, 255);
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.2);
 }
 
 /* weather icons */
