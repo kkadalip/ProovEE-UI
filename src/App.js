@@ -15,7 +15,7 @@ import i18n from './translations/i18n';
 import {Table} from 'reactstrap';
 import 'react-icons-weather/lib/css/weather-icons.css';
 
-const debug = true;
+const debug = false;
 
 function getTabs() {
     return [
@@ -38,7 +38,7 @@ function getStatistics(value) {
         return [];
     }
     //console.log("getStatistics value is: " + JSON.stringify(value));
-    console.log("getStatistics result " + JSON.stringify(value['statistics']));
+    //console.log("getStatistics result " + JSON.stringify(value['statistics']));
     return value['statistics']; // value.statistics;
 }
 
@@ -54,30 +54,7 @@ function getStatisticsAirPressure(value) {
         return [];
     }
     console.log("getStatisticsAirPressure result " + JSON.stringify(value['statistics']['airPressure']));
-    // this.state.airPressure = value['statistics']['airPressure'];
-    //this.state.airPressure = value['statistics']['airPressure'];
-
-
 }
-
-// function getStatisticsFromState() {
-//     if (this === undefined || this.state === undefined || this.state.statistics === undefined) {
-//         return [];
-//     }
-//     console.log("getStatisticsFromState " + JSON.stringify(this.state.statistics));
-//     console.log("getStatisticsFromState2 " + this.state['statistics']);
-//     //return this.state.statistics;
-//     return this.state['statistics'];
-// }
-// function getStatisticsVisibilityMin() {
-//     if (this === undefined || this.state === undefined || this.state.statistics === undefined || this.state.statistics) {
-//         return [];
-//     }
-//     console.log("getStatisticsFromState " + JSON.stringify(this.state.statistics));
-//     console.log("getStatisticsFromState2 " + this.state['statistics']);
-//     //return this.state.statistics;
-//     return this.state.statistics['visibility']['min'];
-// }
 
 class App extends Component {
     constructor(props) {
@@ -86,7 +63,9 @@ class App extends Component {
         const lng = localStorage.getItem('SelectedLanguage') || 'en';
         i18n.changeLanguage(lng);
 
-        console.log("i18n language is " + i18n.language);
+        if (debug) {
+            console.log("i18n language is " + i18n.language)
+        }
         this.state = {
             loading: true,
             stations: [],
@@ -115,7 +94,6 @@ class App extends Component {
     }
 
     componentDidMount() {
-        console.log("component did mount!");
         IndexService.getData().then(data => this.setState({
             loading: false,
             stations: getStations(data),
@@ -175,7 +153,7 @@ class App extends Component {
                 </Row>
             </ColumnGroup>;
 
-        let dataTable =
+        let dataTablePrimeReact =
             <DataTable value={this.state.stations} resizableColumns={true} headerColumnGroup={headerGroup} footerColumnGroup={footerGroup}
                        scrollable={true} scrollHeight="400px" emptyMessage={"No data found, try again later."}>
                 <Column key={'name'} field={'name'}/>
@@ -292,6 +270,193 @@ class App extends Component {
             }
         }
 
+        function getWindChillDisplay(windChill, windChillMax, unit) {
+            return format(windChill, windChill + unit + " (" + windChillMax + unit + ")");
+        }
+
+        function formatAirPressure(val) {
+            return format(val, <span><span>{t('generic.pressure')}:&nbsp;<b>{val}</b>hPa</span><br/></span>);
+        }
+
+        function formatHumidity(val) {
+            return format(val, <span><span>{t('generic.humidity')}:&nbsp;<b>{val}</b>%</span><br/></span>);
+        }
+
+        function formatTemp(val) {
+            return format(val, <span><span>{t('generic.temp')}:&nbsp;<b>{val}</b>°C</span><br/></span>);
+        }
+
+        function formatWaterLevel(val) {
+            return format(val, <span><span>{t('station.min.waterLevel')}:&nbsp;<b>{val}</b>mm</span><br/></span>);
+        }
+
+        function formatWaterLevelEH2000(val) {
+            return format(val, <span><span>{t('station.min.waterLevelEh2000')}:&nbsp;<b>{val}</b>mm</span><br/></span>);
+        }
+
+        function format(val, res) {
+            if (val === undefined || val === null) {
+                return "";
+            }
+            return res;
+        }
+
+        let dataTableReactStrap =
+            <Table hover bordered={false} size={"sm"} striped={true} responsive={true}>
+                <thead style={{fontWeight: "bolder"}}>
+                <tr>
+                    <td>{t('station.full.name')}</td>
+                    <td>{t('station.full.longitude')}<br/>{t('station.full.latitude')}</td>
+                    <td>{t('station.full.phenomenon')}</td>
+                    <td>{t('station.full.visibility')}</td>
+                    <td>{t('station.full.precipitations')}</td>
+                    <td>{t('station.full.uvIndex')}</td>
+                    <td>{t('station.full.wmoCode')}</td>
+                    <td>{t('generic.air')}</td>
+                    <td>{t('generic.water')}</td>
+                    <td>{t('station.full.windDirection')}</td>
+                    <td>{t('station.full.windSpeed')}</td>
+                    <td>{t('station.full.windSpeedMax')}</td>
+                    <td>{t('generic.windChill')}&nbsp;(Max)</td>
+                </tr>
+
+                </thead>
+                <tbody>
+                {this.state.stations.map(function (item, key) {
+                    return (
+                        <tr key={key}>
+                            <td style={{textAlign: "left"}}>{item.name}</td>
+                            <td>{item.longitude}<br/>{item.latitude}</td>
+                            <td>
+                                <div style={{textAlign: "left", display: "inline-block"}}>
+                                    {item.phenomenon}
+                                </div>
+                                <div className="icon-wrap" style={{display: "inline-block"}}>
+                                    <i className={"wi " + getWeatherIconArrayValue(item.phenomenon)}/>
+                                </div>
+                            </td>
+                            <td>{item.visibility}</td>
+                            <td>{item.precipitations}</td>
+                            <td>{item.uvIndex}</td>
+                            <td>{item.wmoCode}</td>
+                            <td style={{textAlign: "left"}}>
+                                {formatAirPressure(item.airPressure)}
+                                {formatHumidity(item.relativeHumidity)}
+                                {formatTemp(item.airTemperature)}
+                            </td>
+                            <td style={{textAlign: "left"}}>
+                                {formatWaterLevel(item.waterLevel)}
+                                {formatWaterLevelEH2000(item.waterLevelEh2000)}
+                                {formatTemp(item.waterTemperature)}
+                            </td>
+                            <td>{item.windDirection}</td>
+                            <td>{item.windSpeed}</td>
+                            <td>{item.windSpeedMax}</td>
+                            <td>{getWindChillDisplay(item.windChillC, item.windChillMaxC, "°C")}
+                                <br/>{getWindChillDisplay(item.windChillF, item.windChillMaxF, "F")}</td>
+                        </tr>
+                    )
+                })}
+                </tbody>
+            </Table>;
+        let dataTableAveragesReactStrap =
+            <Table size={"sm"} striped={true} responsive={true}>
+                <thead>
+                <tr>
+                    <td><b>Unit</b></td>
+                    <td>{t('station.full.visibility')}</td>
+                    <td>{t('station.full.uvIndex')}</td>
+                    <td>{t('station.full.airPressure')}</td>
+                    <td>{t('station.full.relativeHumidity')}</td>
+                    <td>{t('station.full.airTemperature')}</td>
+                    <td>{t('station.full.windDirection')}</td>
+                    <td>{t('station.full.windSpeed')}</td>
+                    <td>{t('station.full.windSpeedMax')}</td>
+                    <td>{t('station.full.waterLevel')}</td>
+                    <td>{t('station.full.waterLevelEh2000')}</td>
+                    <td>{t('station.full.waterTemperature')}</td>
+                    <td>{t('station.full.windChillC')}</td>
+                    <td>{t('station.full.windChillF')}</td>
+                    <td>{t('station.full.windChillMaxC')}</td>
+                    <td>{t('station.full.windChillMaxF')}</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><b>Min</b></td>
+                    <td>{getMin(visibility)}</td>
+                    <td>{getMin(uvIndex)}</td>
+                    <td>{getMin(airPressure)}</td>
+                    <td>{getMin(humidity)}</td>
+                    <td>{getMin(airTemp)}</td>
+                    <td>{getMin(windDir)}</td>
+                    <td>{getMin(windSpeed)}</td>
+                    <td>{getMin(windSpeedMax)}</td>
+                    <td>{getMin(waterLevel)}</td>
+                    <td>{getMin(waterLevelEH2000)}</td>
+                    <td>{getMin(waterTemp)}</td>
+                    <td>{getMin(windChillC)}</td>
+                    <td>{getMin(windChillF)}</td>
+                    <td>{getMin(windChillMaxC)}</td>
+                    <td>{getMin(windChillMaxF)}</td>
+                </tr>
+                <tr>
+                    <td><b>Max</b></td>
+                    <td>{getMax(visibility)}</td>
+                    <td>{getMax(uvIndex)}</td>
+                    <td>{getMax(airPressure)}</td>
+                    <td>{getMax(humidity)}</td>
+                    <td>{getMax(airTemp)}</td>
+                    <td>{getMax(windDir)}</td>
+                    <td>{getMax(windSpeed)}</td>
+                    <td>{getMax(windSpeedMax)}</td>
+                    <td>{getMax(waterLevel)}</td>
+                    <td>{getMax(waterLevelEH2000)}</td>
+                    <td>{getMax(waterTemp)}</td>
+                    <td>{getMax(windChillC)}</td>
+                    <td>{getMax(windChillF)}</td>
+                    <td>{getMax(windChillMaxC)}</td>
+                    <td>{getMax(windChillMaxF)}</td>
+                </tr>
+                <tr>
+                    <td><b>Average</b></td>
+                    <td>{getAvg(visibility)}</td>
+                    <td>{getAvg(uvIndex)}</td>
+                    <td>{getAvg(airPressure)}</td>
+                    <td>{getAvg(humidity)}</td>
+                    <td>{getAvg(airTemp)}</td>
+                    <td>{getAvg(windDir)}</td>
+                    <td>{getAvg(windSpeed)}</td>
+                    <td>{getAvg(windSpeedMax)}</td>
+                    <td>{getAvg(waterLevel)}</td>
+                    <td>{getAvg(waterLevelEH2000)}</td>
+                    <td>{getAvg(waterTemp)}</td>
+                    <td>{getAvg(windChillC)}</td>
+                    <td>{getAvg(windChillF)}</td>
+                    <td>{getAvg(windChillMaxC)}</td>
+                    <td>{getAvg(windChillMaxF)}</td>
+                </tr>
+                <tr>
+                    <td><b>Count</b></td>
+                    <td>{getCount(visibility)}</td>
+                    <td>{getCount(uvIndex)}</td>
+                    <td>{getCount(airPressure)}</td>
+                    <td>{getCount(humidity)}</td>
+                    <td>{getCount(airTemp)}</td>
+                    <td>{getCount(windDir)}</td>
+                    <td>{getCount(windSpeed)}</td>
+                    <td>{getCount(windSpeedMax)}</td>
+                    <td>{getCount(waterLevel)}</td>
+                    <td>{getCount(waterLevelEH2000)}</td>
+                    <td>{getCount(waterTemp)}</td>
+                    <td>{getCount(windChillC)}</td>
+                    <td>{getCount(windChillF)}</td>
+                    <td>{getCount(windChillMaxC)}</td>
+                    <td>{getCount(windChillMaxF)}</td>
+                </tr>
+                </tbody>
+            </Table>;
+
         return (
             <div className="App">
                 <SelectButton value={i18n.language} options={langSelectItems} onChange={(e) => changeLanguage(e.value)} style={{float: "right"}}/>
@@ -306,187 +471,15 @@ class App extends Component {
                             <ProgressSpinner/>
                         </div>
                         <div hidden={isLoading}>
-                            {dataTable}
-                        </div>
-
-                        <br/>
-                        <h2>Units:</h2>
-                        <h2>Average values:</h2>
-                        <table>
-                            <tbody>
-
-                            </tbody>
-                        </table>
-                        <table>
-                            <thead>
-                            <tr>
-                                <td>UNIT</td>
-                                <td>{t('station.full.visibility')}</td>
-                                <td>{t('station.full.uvIndex')}</td>
-                                <td>{t('station.full.airPressure')}</td>
-                                <td>{t('station.full.relativeHumidity')}</td>
-                                <td>{t('station.full.airTemperature')}</td>
-                                <td>{t('station.full.windDirection')}</td>
-                                <td>{t('station.full.windSpeed')}</td>
-                                <td>{t('station.full.windSpeedMax')}</td>
-                                <td>{t('station.full.waterLevel')}</td>
-                                <td>{t('station.full.waterLevelEh2000')}</td>
-                                <td>{t('station.full.waterTemperature')}</td>
-                                <td>{t('station.full.windChillC')}</td>
-                                <td>{t('station.full.windChillF')}</td>
-                                <td>{t('station.full.windChillMaxC')}</td>
-                                <td>{t('station.full.windChillMaxF')}</td>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td>MIN</td>
-                                <td>{getMin(visibility)}</td>
-                                <td>{getMin(uvIndex)}</td>
-                                <td>{getMin(airPressure)}</td>
-                                <td>{getMin(humidity)}</td>
-                                <td>{getMin(airTemp)}</td>
-                                <td>{getMin(windDir)}</td>
-                                <td>{getMin(windSpeed)}</td>
-                                <td>{getMin(windSpeedMax)}</td>
-                                <td>{getMin(waterLevel)}</td>
-                                <td>{getMin(waterLevelEH2000)}</td>
-                                <td>{getMin(waterTemp)}</td>
-                                <td>{getMin(windChillC)}</td>
-                                <td>{getMin(windChillF)}</td>
-                                <td>{getMin(windChillMaxC)}</td>
-                                <td>{getMin(windChillMaxF)}</td>
-                            </tr>
-                            <tr>
-                                <td>MAX</td>
-                                <td>{getMax(visibility)}</td>
-                                <td>{getMax(uvIndex)}</td>
-                                <td>{getMax(airPressure)}</td>
-                                <td>{getMax(humidity)}</td>
-                                <td>{getMax(airTemp)}</td>
-                                <td>{getMax(windDir)}</td>
-                                <td>{getMax(windSpeed)}</td>
-                                <td>{getMax(windSpeedMax)}</td>
-                                <td>{getMax(waterLevel)}</td>
-                                <td>{getMax(waterLevelEH2000)}</td>
-                                <td>{getMax(waterTemp)}</td>
-                                <td>{getMax(windChillC)}</td>
-                                <td>{getMax(windChillF)}</td>
-                                <td>{getMax(windChillMaxC)}</td>
-                                <td>{getMax(windChillMaxF)}</td>
-                            </tr>
-                            <tr>
-                                <td>AVERAGE</td>
-                                <td>{getAvg(visibility)}</td>
-                                <td>{getAvg(uvIndex)}</td>
-                                <td>{getAvg(airPressure)}</td>
-                                <td>{getAvg(humidity)}</td>
-                                <td>{getAvg(airTemp)}</td>
-                                <td>{getAvg(windDir)}</td>
-                                <td>{getAvg(windSpeed)}</td>
-                                <td>{getAvg(windSpeedMax)}</td>
-                                <td>{getAvg(waterLevel)}</td>
-                                <td>{getAvg(waterLevelEH2000)}</td>
-                                <td>{getAvg(waterTemp)}</td>
-                                <td>{getAvg(windChillC)}</td>
-                                <td>{getAvg(windChillF)}</td>
-                                <td>{getAvg(windChillMaxC)}</td>
-                                <td>{getAvg(windChillMaxF)}</td>
-                            </tr>
-                            <tr>
-                                <td>COUNT</td>
-                                <td>{getCount(visibility)}</td>
-                                <td>{getCount(uvIndex)}</td>
-                                <td>{getCount(airPressure)}</td>
-                                <td>{getCount(humidity)}</td>
-                                <td>{getCount(airTemp)}</td>
-                                <td>{getCount(windDir)}</td>
-                                <td>{getCount(windSpeed)}</td>
-                                <td>{getCount(windSpeedMax)}</td>
-                                <td>{getCount(waterLevel)}</td>
-                                <td>{getCount(waterLevelEH2000)}</td>
-                                <td>{getCount(waterTemp)}</td>
-                                <td>{getCount(windChillC)}</td>
-                                <td>{getCount(windChillF)}</td>
-                                <td>{getCount(windChillMaxC)}</td>
-                                <td>{getCount(windChillMaxF)}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <br/>
-                        <h1>ReactStrap:</h1>
-                        <div>
-                            <Table style={{padding: "20px"}}>
-                                <thead style={{fontWeight: "bolder"}}>
-                                <tr>
-                                    <td>{t('station.full.name')}</td>
-                                    <td>{t('station.full.longitude')}</td>
-                                    <td>{t('station.full.latitude')}</td>
-                                    <td>{t('station.full.phenomenon')}</td>
-                                    <td>{t('station.full.visibility')}</td>
-                                    <td>{t('station.full.precipitations')}</td>
-                                    <td>{t('station.full.uvIndex')}</td>
-                                    <td>{t('station.full.wmoCode')}</td>
-                                    <td>{t('station.full.airPressure')}</td>
-                                    <td>{t('station.full.relativeHumidity')}</td>
-                                    <td>{t('station.full.airTemperature')}</td>
-                                    <td>{t('station.full.waterLevel')}</td>
-                                    <td>{t('station.full.waterLevelEh2000')}</td>
-                                    <td>{t('station.full.waterTemperature')}</td>
-                                    <td>{t('station.full.windDirection')}</td>
-                                    <td>{t('station.full.windSpeed')}</td>
-                                    <td>{t('station.full.windSpeedMax')}</td>
-                                    <td>{t('station.full.windChillC')}</td>
-                                    <td>{t('station.full.windChillF')}</td>
-                                    <td>{t('station.full.windChillMaxC')}</td>
-                                    <td>{t('station.full.windChillMaxF')}</td>
-                                </tr>
-
-                                </thead>
-                                <tbody>
-                                {this.state.stations.map(function (item, key) {
-                                    return (
-                                        <tr key={key}>
-                                            <td style={{textAlign: "left"}}>{item.name}</td>
-                                            <td>{item.longitude}</td>
-                                            <td>{item.latitude}</td>
-                                            <td>
-                                                <div style={{textAlign: "left"}}>
-                                                    <div className="icon-wrap" style={{display: "inline-block"}}>
-                                                        <i className={"wi " + getWeatherIconArrayValue(item.phenomenon)}/>
-                                                    </div>
-                                                    <div style={{display: "inline-block"}}>
-                                                        {item.phenomenon}
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>{item.visibility}</td>
-                                            <td>{item.precipitations}</td>
-                                            <td>{item.uvIndex}</td>
-                                            <td>{item.wmoCode}</td>
-                                            <td>{item.airPressure}</td>
-                                            <td>{item.relativeHumidity}</td>
-                                            <td>{item.airTemperature}</td>
-                                            <td>{item.waterLevel}</td>
-                                            <td>{item.waterLevelEh2000}</td>
-                                            <td>{item.waterTemperature}</td>
-                                            <td>{item.windDirection}</td>
-                                            <td>{item.windSpeed}</td>
-                                            <td>{item.windSpeedMax}</td>
-                                            <td>{item.windChillC}</td>
-                                            <td>{item.windChillF}</td>
-                                            <td>{item.windChillMaxC}</td>
-                                            <td>{item.windChillMaxF}</td>
-                                        </tr>
-                                    )
-                                })}
-                                <tr>
-                                    <td>
-                                        <b>AVERAGES</b>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </Table>
+                            <br/>
+                            <h2>{t('generic.dataset')}:</h2>
+                            {dataTablePrimeReact}
+                            <br/>
+                            <h2>{t('generic.averages')}:</h2>
+                            {dataTableAveragesReactStrap}
+                            <br/>
+                            <h2>{t('generic.datasetOverview')}:</h2>
+                            {dataTableReactStrap}
                         </div>
                     </div>
                 </div>

@@ -6,7 +6,7 @@ import {reactI18nextModule} from 'react-i18next';
 import common_en from "./en.json";
 import common_et from "./et.json";
 
-const debug = false; // TURN OFF IN LIVE!
+const debug = false; // TODO TURN OFF IN LIVE!
 
 i18n
 //.use(Backend)

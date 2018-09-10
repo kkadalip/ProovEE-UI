@@ -79,5 +79,16 @@
       "windChillF": "Tuulekülm",
       "windChillMaxF": "Tuulekülm max"
     }
+  },
+  "generic": {
+    "windChill": "Tuulekülm",
+    "dataset": "Andmekogu",
+    "datasetOverview": "Andmekogu ülevaade",
+    "averages": "Statistiline keskmine",
+    "pressure": "Rõhk",
+    "humidity": "Niiskus",
+    "temp": "Temp",
+    "air": "Õhk",
+    "water": "Vesi"
   }
 }

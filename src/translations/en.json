@@ -102,5 +102,16 @@
       "windChillF": "F",
       "windChillMaxF": "F"
     }
+  },
+  "generic": {
+    "windChill": "Wind chill",
+    "dataset": "Dataset",
+    "datasetOverview": "Dataset overview",
+    "averages": "Statistic averages",
+    "pressure": "Pressure",
+    "humidity": "Humidity",
+    "temp": "Temp",
+    "air": "Air",
+    "water": "Water"
   }
 }
