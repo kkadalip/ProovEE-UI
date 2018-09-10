@@ -90,6 +90,7 @@
     "temp": "Temp",
     "air": "Õhk",
     "water": "Vesi",
-    "wind": "Tuul"
+    "wind": "Tuul",
+    "weather": "Ilm"
   }
 }

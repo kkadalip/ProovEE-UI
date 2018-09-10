@@ -113,6 +113,7 @@
     "temp": "Temp",
     "air": "Air",
     "water": "Water",
-    "wind": "Wind"
+    "wind": "Wind",
+    "weather": "Weather"
   }
 }

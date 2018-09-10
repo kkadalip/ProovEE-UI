@@ -274,38 +274,6 @@ class App extends Component {
             return format(windChill, windChill + unit + " (" + windChillMax + unit + ")");
         }
 
-        function formatAirPressure(val) {
-            return formatData(t('generic.pressure'), val, "hPa");
-        }
-
-        function formatHumidity(val) {
-            return formatData(t('generic.humidity'), val, "%");
-        }
-
-        function formatTemp(val) {
-            return formatData(t('generic.temp'), val, "°C");
-        }
-
-        function formatWaterLevel(val) {
-            return formatData(t('station.min.waterLevel'), val, "mm");
-        }
-
-        function formatWaterLevelEH2000(val) {
-            return formatData(t('station.min.waterLevelEh2000'), val, "mm");
-        }
-
-        function formatWindSpeed(val) {
-            return formatData(t('station.min.windSpeed'), val, "m/s");
-        }
-
-        function formatWindSpeedMax(val) {
-            return formatData(t('station.min.windSpeed') + " (MAX)", val, "m/s");
-        }
-
-        function formatWindDirection(val) {
-            return formatData(t('station.min.windDirection'), val, "°");
-        }
-
         function formatData(title, val, unit) {
             return format(val, <span><span>{title}:&nbsp;<b>{val}</b>{unit}</span><br/></span>);
         }
@@ -321,13 +289,10 @@ class App extends Component {
             <Table hover bordered={false} size={"sm"} striped={true} responsive={true} style={{textAlign: "left"}}>
                 <thead style={{fontWeight: "bolder"}}>
                 <tr>
-                    <td>{t('station.full.name')}</td>
+                    <td>{t('station.full.name')}<br/>{t('station.full.wmoCode')}</td>
                     <td>{t('station.full.longitude')}<br/>{t('station.full.latitude')}</td>
                     <td>{t('station.full.phenomenon')}</td>
-                    <td>{t('station.full.visibility')}</td>
-                    <td>{t('station.full.precipitations')}</td>
-                    <td>{t('station.full.uvIndex')}</td>
-                    <td>{t('station.full.wmoCode')}</td>
+                    <td>{t('generic.weather')}</td>
                     <td>{t('generic.air')}</td>
                     <td>{t('generic.water')}</td>
                     <td>{t('generic.wind')}</td>
@@ -339,7 +304,7 @@ class App extends Component {
                 {this.state.stations.map(function (item, key) {
                     return (
                         <tr key={key}>
-                            <td>{item.name}</td>
+                            <td><b>{item.name}</b><br/>{item.wmoCode}</td>
                             <td>{item.longitude}<br/>{item.latitude}</td>
                             <td>
                                 <div style={{display: "inline-block"}}>
@@ -349,27 +314,30 @@ class App extends Component {
                                     <i className={"wi " + getWeatherIconArrayValue(item.phenomenon)}/>
                                 </div>
                             </td>
-                            <td>{item.visibility}</td>
-                            <td>{item.precipitations}</td>
-                            <td>{item.uvIndex}</td>
-                            <td>{item.wmoCode}</td>
                             <td>
-                                {formatAirPressure(item.airPressure)}
-                                {formatHumidity(item.relativeHumidity)}
-                                {formatTemp(item.airTemperature)}
+                                {formatData(t('station.full.visibility'), item.visibility, "km")}
+                                {formatData(t('station.full.precipitations'), item.precipitations, "mm")}
+                                {formatData(t('station.full.uvIndex'), item.uvIndex, "")}
                             </td>
                             <td>
-                                {formatWaterLevel(item.waterLevel)}
-                                {formatWaterLevelEH2000(item.waterLevelEh2000)}
-                                {formatTemp(item.waterTemperature)}
+                                {formatData(t('generic.pressure'), item.airPressure, "hPa")}
+                                {formatData(t('generic.humidity'), item.relativeHumidity, "%")}
+                                {formatData(t('generic.temp'), item.airTemperature, "°C")}
                             </td>
                             <td>
-                                {formatWindDirection(item.windDirection)}
-                                {formatWindSpeed(item.windSpeed)}
-                                {formatWindSpeedMax(item.windSpeedMax)}
+                                {formatData(t('station.min.waterLevel'), item.waterLevel, "mm")}
+                                {formatData(t('station.min.waterLevelEh2000'), item.waterLevelEh2000, "mm")}
+                                {formatData(t('generic.temp'), item.waterTemperature, "°C")}
                             </td>
-                            <td>{getWindChillDisplay(item.windChillC, item.windChillMaxC, "°C")}
-                                <br/>{getWindChillDisplay(item.windChillF, item.windChillMaxF, "F")}</td>
+                            <td>
+                                {formatData(t('station.min.windDirection'), item.windDirection, "°")}
+                                {formatData(t('station.min.windSpeed'), item.windSpeed, "m/s")}
+                                {formatData(t('station.min.windSpeed') + " (MAX)", item.windSpeedMax, "m/s")}
+                            </td>
+                            <td>
+                                {getWindChillDisplay(item.windChillC, item.windChillMaxC, "°C")}<br/>
+                                {getWindChillDisplay(item.windChillF, item.windChillMaxF, "F")}
+                            </td>
                         </tr>
                     )
                 })}
