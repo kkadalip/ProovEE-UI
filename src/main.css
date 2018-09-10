@@ -1,6 +1,5 @@
 * {
     font-family: Lato, Arial, Helvetica, sans-serif;
-    text-align: center;
 }
 
 body {
@@ -8,6 +7,7 @@ body {
     padding: 0;
     background: rgb(239, 239, 239);
     color: rgb(0, 0, 0);
+    text-align: center;
 }
 
 body .p-selectbutton .p-button.p-highlight {

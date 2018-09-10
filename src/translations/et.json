@@ -89,6 +89,7 @@
     "humidity": "Niiskus",
     "temp": "Temp",
     "air": "Õhk",
-    "water": "Vesi"
+    "water": "Vesi",
+    "wind": "Tuul"
   }
 }

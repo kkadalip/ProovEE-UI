@@ -112,6 +112,7 @@
     "humidity": "Humidity",
     "temp": "Temp",
     "air": "Air",
-    "water": "Water"
+    "water": "Water",
+    "wind": "Wind"
   }
 }

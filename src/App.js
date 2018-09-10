@@ -214,11 +214,11 @@ class App extends Component {
             "Thunder": {day: "wi-day-lightning", neutral: "wi-lightning", night: "wi-night-alt-lightning"},
             "Thunderstorm": {day: "wi-day-thunderstorm", neutral: "wi-thunderstorm", night: "wi-night-alt-thunderstorm"}
         };
-        // if (debug) {
-        //     for (const key in weatherIconArray) {
-        //         console.log("key " + key + " DAY: " + weatherIconArray[key][0] + " NEUTRAL: " + weatherIconArray[key][1] + " NIGHT: " + weatherIconArray[key][2]);
-        //     }
-        // }
+        if (debug) {
+            for (const key in weatherIconArray) {
+                console.log("key " + key + " DAY: " + weatherIconArray[key][0] + " NEUTRAL: " + weatherIconArray[key][1] + " NIGHT: " + weatherIconArray[key][2]);
+            }
+        }
         const {t, i18n} = this.props;
         const changeLanguage = (lng) => {
             i18n.changeLanguage(lng);
@@ -275,23 +275,39 @@ class App extends Component {
         }
 
         function formatAirPressure(val) {
-            return format(val, <span><span>{t('generic.pressure')}:&nbsp;<b>{val}</b>hPa</span><br/></span>);
+            return formatData(t('generic.pressure'), val, "hPa");
         }
 
         function formatHumidity(val) {
-            return format(val, <span><span>{t('generic.humidity')}:&nbsp;<b>{val}</b>%</span><br/></span>);
+            return formatData(t('generic.humidity'), val, "%");
         }
 
         function formatTemp(val) {
-            return format(val, <span><span>{t('generic.temp')}:&nbsp;<b>{val}</b>°C</span><br/></span>);
+            return formatData(t('generic.temp'), val, "°C");
         }
 
         function formatWaterLevel(val) {
-            return format(val, <span><span>{t('station.min.waterLevel')}:&nbsp;<b>{val}</b>mm</span><br/></span>);
+            return formatData(t('station.min.waterLevel'), val, "mm");
         }
 
         function formatWaterLevelEH2000(val) {
-            return format(val, <span><span>{t('station.min.waterLevelEh2000')}:&nbsp;<b>{val}</b>mm</span><br/></span>);
+            return formatData(t('station.min.waterLevelEh2000'), val, "mm");
+        }
+
+        function formatWindSpeed(val) {
+            return formatData(t('station.min.windSpeed'), val, "m/s");
+        }
+
+        function formatWindSpeedMax(val) {
+            return formatData(t('station.min.windSpeed') + " (MAX)", val, "m/s");
+        }
+
+        function formatWindDirection(val) {
+            return formatData(t('station.min.windDirection'), val, "°");
+        }
+
+        function formatData(title, val, unit) {
+            return format(val, <span><span>{title}:&nbsp;<b>{val}</b>{unit}</span><br/></span>);
         }
 
         function format(val, res) {
@@ -302,7 +318,7 @@ class App extends Component {
         }
 
         let dataTableReactStrap =
-            <Table hover bordered={false} size={"sm"} striped={true} responsive={true}>
+            <Table hover bordered={false} size={"sm"} striped={true} responsive={true} style={{textAlign: "left"}}>
                 <thead style={{fontWeight: "bolder"}}>
                 <tr>
                     <td>{t('station.full.name')}</td>
@@ -314,9 +330,7 @@ class App extends Component {
                     <td>{t('station.full.wmoCode')}</td>
                     <td>{t('generic.air')}</td>
                     <td>{t('generic.water')}</td>
-                    <td>{t('station.full.windDirection')}</td>
-                    <td>{t('station.full.windSpeed')}</td>
-                    <td>{t('station.full.windSpeedMax')}</td>
+                    <td>{t('generic.wind')}</td>
                     <td>{t('generic.windChill')}&nbsp;(Max)</td>
                 </tr>
 
@@ -325,10 +339,10 @@ class App extends Component {
                 {this.state.stations.map(function (item, key) {
                     return (
                         <tr key={key}>
-                            <td style={{textAlign: "left"}}>{item.name}</td>
+                            <td>{item.name}</td>
                             <td>{item.longitude}<br/>{item.latitude}</td>
                             <td>
-                                <div style={{textAlign: "left", display: "inline-block"}}>
+                                <div style={{display: "inline-block"}}>
                                     {item.phenomenon}
                                 </div>
                                 <div className="icon-wrap" style={{display: "inline-block"}}>
@@ -339,19 +353,21 @@ class App extends Component {
                             <td>{item.precipitations}</td>
                             <td>{item.uvIndex}</td>
                             <td>{item.wmoCode}</td>
-                            <td style={{textAlign: "left"}}>
+                            <td>
                                 {formatAirPressure(item.airPressure)}
                                 {formatHumidity(item.relativeHumidity)}
                                 {formatTemp(item.airTemperature)}
                             </td>
-                            <td style={{textAlign: "left"}}>
+                            <td>
                                 {formatWaterLevel(item.waterLevel)}
                                 {formatWaterLevelEH2000(item.waterLevelEh2000)}
                                 {formatTemp(item.waterTemperature)}
                             </td>
-                            <td>{item.windDirection}</td>
-                            <td>{item.windSpeed}</td>
-                            <td>{item.windSpeedMax}</td>
+                            <td>
+                                {formatWindDirection(item.windDirection)}
+                                {formatWindSpeed(item.windSpeed)}
+                                {formatWindSpeedMax(item.windSpeedMax)}
+                            </td>
                             <td>{getWindChillDisplay(item.windChillC, item.windChillMaxC, "°C")}
                                 <br/>{getWindChillDisplay(item.windChillF, item.windChillMaxF, "F")}</td>
                         </tr>
