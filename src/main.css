@@ -65,5 +65,6 @@ body .p-selectbutton .p-button.p-highlight {
 /* weather icons */
 .icon-wrap .icon,
 .icon-wrap .wi {
-    font-size: 80px;
+    font-size: 22px;
+    margin-right: 10px;
 }

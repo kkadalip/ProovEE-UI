@@ -6,13 +6,14 @@ import {DataTable} from 'primereact/datatable';
 import {Column} from 'primereact/column';
 import {ColumnGroup} from 'primereact/columngroup';
 import {Row} from 'primereact/row';
-import {WeatherService} from './service/WeatherService';
+import {IndexService} from './service/IndexService';
 import {ProgressSpinner} from 'primereact/progressspinner';
 import {SelectButton} from 'primereact/selectbutton';
 import {TabMenu} from 'primereact/tabmenu';
 import {translate} from 'react-i18next';
 import i18n from './translations/i18n';
 import {Table} from 'reactstrap';
+import 'react-icons-weather/lib/css/weather-icons.css';
 
 const debug = true;
 
@@ -36,16 +37,47 @@ function getStatistics(value) {
     if (value === undefined) {
         return [];
     }
-    return value.statistics;
+    //console.log("getStatistics value is: " + JSON.stringify(value));
+    console.log("getStatistics result " + JSON.stringify(value['statistics']));
+    return value['statistics']; // value.statistics;
 }
 
-function getStatisticsFromState() {
-    if (this === undefined || this.state === undefined || this.state.statistics === undefined) {
+function getStatisticsVisibility(value) {
+    if (value === undefined) {
         return [];
     }
-    console.log("LALALA " + JSON.stringify(this.state.statistics));
-    return this.state.statistics;
+    return value['statistics']['visibility'];
 }
+
+function getStatisticsAirPressure(value) {
+    if (value === undefined) {
+        return [];
+    }
+    console.log("getStatisticsAirPressure result " + JSON.stringify(value['statistics']['airPressure']));
+    // this.state.airPressure = value['statistics']['airPressure'];
+    //this.state.airPressure = value['statistics']['airPressure'];
+
+
+}
+
+// function getStatisticsFromState() {
+//     if (this === undefined || this.state === undefined || this.state.statistics === undefined) {
+//         return [];
+//     }
+//     console.log("getStatisticsFromState " + JSON.stringify(this.state.statistics));
+//     console.log("getStatisticsFromState2 " + this.state['statistics']);
+//     //return this.state.statistics;
+//     return this.state['statistics'];
+// }
+// function getStatisticsVisibilityMin() {
+//     if (this === undefined || this.state === undefined || this.state.statistics === undefined || this.state.statistics) {
+//         return [];
+//     }
+//     console.log("getStatisticsFromState " + JSON.stringify(this.state.statistics));
+//     console.log("getStatisticsFromState2 " + this.state['statistics']);
+//     //return this.state.statistics;
+//     return this.state.statistics['visibility']['min'];
+// }
 
 class App extends Component {
     constructor(props) {
@@ -58,14 +90,39 @@ class App extends Component {
         this.state = {
             loading: true,
             stations: [],
-            statistics: [],
+            statistics: {
+                visibility: {},
+                uvIndex: {},
+                airPressure: {},
+                humidity: {},
+                airTemperature: {},
+                windDirection: {},
+                windSpeed: {},
+                waterLevel: {},
+                waterLevelEH2000: {},
+                waterTemperature: {},
+                windSpeedMax: {},
+                windChillC: {},
+                windChillMaxC: {},
+                windChillF: {},
+                windChillMaxF: {}
+            },
+            visibility: [],
+            airPressure: [],
             tabs: getTabs()
         };
         translate.setI18n(i18n);
     }
 
     componentDidMount() {
-        WeatherService.getData().then(data => this.setState({loading: false, stations: getStations(data), statistics: getStatistics(data)}));
+        console.log("component did mount!");
+        IndexService.getData().then(data => this.setState({
+            loading: false,
+            stations: getStations(data),
+            statistics: getStatistics(data), // getStatistics(data)
+            visibility: getStatisticsVisibility(data)
+        })).then(data => getStatisticsAirPressure(data));
+
     }
 
     render() {
@@ -179,11 +236,11 @@ class App extends Component {
             "Thunder": {day: "wi-day-lightning", neutral: "wi-lightning", night: "wi-night-alt-lightning"},
             "Thunderstorm": {day: "wi-day-thunderstorm", neutral: "wi-thunderstorm", night: "wi-night-alt-thunderstorm"}
         };
-        if (debug) {
-            for (const key in weatherIconArray) {
-                console.log("key " + key + " DAY: " + weatherIconArray[key][0] + " NEUTRAL: " + weatherIconArray[key][1] + " NIGHT: " + weatherIconArray[key][2]);
-            }
-        }
+        // if (debug) {
+        //     for (const key in weatherIconArray) {
+        //         console.log("key " + key + " DAY: " + weatherIconArray[key][0] + " NEUTRAL: " + weatherIconArray[key][1] + " NIGHT: " + weatherIconArray[key][2]);
+        //     }
+        // }
         const {t, i18n} = this.props;
         const changeLanguage = (lng) => {
             i18n.changeLanguage(lng);
@@ -194,6 +251,47 @@ class App extends Component {
             {label: 'English', value: 'en'},
             {label: 'Eesti', value: 'et'}
         ];
+        let stats = this.state.statistics;
+        let visibility = stats['visibility'];
+        let uvIndex = stats['uvIndex'];
+        let airPressure = stats['airPressure'];
+        let humidity = stats['humidity'];
+        let airTemp = stats['airTemperature'];
+        let windDir = stats['windDirection'];
+        let windSpeed = stats['windSpeed'];
+        let windSpeedMax = stats['windSpeedMax'];
+        let waterLevel = stats['waterLevel'];
+        let waterLevelEH2000 = stats['waterLevelEH2000'];
+        let waterTemp = stats['waterTemperature'];
+        let windChillC = stats['windChillC'];
+        let windChillF = stats['windChillF'];
+        let windChillMaxC = stats['windChillMaxC'];
+        let windChillMaxF = stats['windChillMaxF'];
+
+        function getMin(obj) {
+            if (obj !== undefined) {
+                return obj.min;
+            }
+        }
+
+        function getMax(obj) {
+            if (obj !== undefined) {
+                return obj.max;
+            }
+        }
+
+        function getAvg(obj) {
+            if (obj !== undefined) {
+                return obj.average;
+            }
+        }
+
+        function getCount(obj) {
+            if (obj !== undefined) {
+                return obj.count;
+            }
+        }
+
         return (
             <div className="App">
                 <SelectButton value={i18n.language} options={langSelectItems} onChange={(e) => changeLanguage(e.value)} style={{float: "right"}}/>
@@ -212,37 +310,113 @@ class App extends Component {
                         </div>
 
                         <br/>
+                        <h2>Units:</h2>
                         <h2>Average values:</h2>
+                        <table>
+                            <tbody>
+
+                            </tbody>
+                        </table>
                         <table>
                             <thead>
                             <tr>
-                                <td>Visibility</td>
-                                <td>Air pressure</td>
-                                <td>Humidity</td>
-                                <td>Air temperature</td>
-                                <td>Wind direction</td>
-                                <td>Wind speed</td>
-                                <td>Water level</td>
-                                <td>Wind chill (C)</td>
-                                <td>Wind chill max (C)</td>
-                                <td>Wind chill (F)</td>
-                                <td>Wind chill max (F)</td>
+                                <td>UNIT</td>
+                                <td>{t('station.full.visibility')}</td>
+                                <td>{t('station.full.uvIndex')}</td>
+                                <td>{t('station.full.airPressure')}</td>
+                                <td>{t('station.full.relativeHumidity')}</td>
+                                <td>{t('station.full.airTemperature')}</td>
+                                <td>{t('station.full.windDirection')}</td>
+                                <td>{t('station.full.windSpeed')}</td>
+                                <td>{t('station.full.windSpeedMax')}</td>
+                                <td>{t('station.full.waterLevel')}</td>
+                                <td>{t('station.full.waterLevelEh2000')}</td>
+                                <td>{t('station.full.waterTemperature')}</td>
+                                <td>{t('station.full.windChillC')}</td>
+                                <td>{t('station.full.windChillF')}</td>
+                                <td>{t('station.full.windChillMaxC')}</td>
+                                <td>{t('station.full.windChillMaxF')}</td>
                             </tr>
                             </thead>
                             <tbody>
-                            {getStatisticsFromState().map(function (item, key) {
-                                return (
-                                    <tr key={key}>
-                                        <td>{key} {item}</td>
-                                    </tr>
-                                )
-                            })}
+                            <tr>
+                                <td>MIN</td>
+                                <td>{getMin(visibility)}</td>
+                                <td>{getMin(uvIndex)}</td>
+                                <td>{getMin(airPressure)}</td>
+                                <td>{getMin(humidity)}</td>
+                                <td>{getMin(airTemp)}</td>
+                                <td>{getMin(windDir)}</td>
+                                <td>{getMin(windSpeed)}</td>
+                                <td>{getMin(windSpeedMax)}</td>
+                                <td>{getMin(waterLevel)}</td>
+                                <td>{getMin(waterLevelEH2000)}</td>
+                                <td>{getMin(waterTemp)}</td>
+                                <td>{getMin(windChillC)}</td>
+                                <td>{getMin(windChillF)}</td>
+                                <td>{getMin(windChillMaxC)}</td>
+                                <td>{getMin(windChillMaxF)}</td>
+                            </tr>
+                            <tr>
+                                <td>MAX</td>
+                                <td>{getMax(visibility)}</td>
+                                <td>{getMax(uvIndex)}</td>
+                                <td>{getMax(airPressure)}</td>
+                                <td>{getMax(humidity)}</td>
+                                <td>{getMax(airTemp)}</td>
+                                <td>{getMax(windDir)}</td>
+                                <td>{getMax(windSpeed)}</td>
+                                <td>{getMax(windSpeedMax)}</td>
+                                <td>{getMax(waterLevel)}</td>
+                                <td>{getMax(waterLevelEH2000)}</td>
+                                <td>{getMax(waterTemp)}</td>
+                                <td>{getMax(windChillC)}</td>
+                                <td>{getMax(windChillF)}</td>
+                                <td>{getMax(windChillMaxC)}</td>
+                                <td>{getMax(windChillMaxF)}</td>
+                            </tr>
+                            <tr>
+                                <td>AVERAGE</td>
+                                <td>{getAvg(visibility)}</td>
+                                <td>{getAvg(uvIndex)}</td>
+                                <td>{getAvg(airPressure)}</td>
+                                <td>{getAvg(humidity)}</td>
+                                <td>{getAvg(airTemp)}</td>
+                                <td>{getAvg(windDir)}</td>
+                                <td>{getAvg(windSpeed)}</td>
+                                <td>{getAvg(windSpeedMax)}</td>
+                                <td>{getAvg(waterLevel)}</td>
+                                <td>{getAvg(waterLevelEH2000)}</td>
+                                <td>{getAvg(waterTemp)}</td>
+                                <td>{getAvg(windChillC)}</td>
+                                <td>{getAvg(windChillF)}</td>
+                                <td>{getAvg(windChillMaxC)}</td>
+                                <td>{getAvg(windChillMaxF)}</td>
+                            </tr>
+                            <tr>
+                                <td>COUNT</td>
+                                <td>{getCount(visibility)}</td>
+                                <td>{getCount(uvIndex)}</td>
+                                <td>{getCount(airPressure)}</td>
+                                <td>{getCount(humidity)}</td>
+                                <td>{getCount(airTemp)}</td>
+                                <td>{getCount(windDir)}</td>
+                                <td>{getCount(windSpeed)}</td>
+                                <td>{getCount(windSpeedMax)}</td>
+                                <td>{getCount(waterLevel)}</td>
+                                <td>{getCount(waterLevelEH2000)}</td>
+                                <td>{getCount(waterTemp)}</td>
+                                <td>{getCount(windChillC)}</td>
+                                <td>{getCount(windChillF)}</td>
+                                <td>{getCount(windChillMaxC)}</td>
+                                <td>{getCount(windChillMaxF)}</td>
+                            </tr>
                             </tbody>
                         </table>
                         <br/>
                         <h1>ReactStrap:</h1>
                         <div>
-                            <Table>
+                            <Table style={{padding: "20px"}}>
                                 <thead style={{fontWeight: "bolder"}}>
                                 <tr>
                                     <td>{t('station.full.name')}</td>
@@ -273,12 +447,17 @@ class App extends Component {
                                 {this.state.stations.map(function (item, key) {
                                     return (
                                         <tr key={key}>
-                                            <td>{item.name}</td>
+                                            <td style={{textAlign: "left"}}>{item.name}</td>
                                             <td>{item.longitude}</td>
                                             <td>{item.latitude}</td>
                                             <td>
-                                                <div>
-                                                    <i className={"pi " + getWeatherIconArrayValue(item.phenomenon) + "::before"}></i>{item.phenomenon}
+                                                <div style={{textAlign: "left"}}>
+                                                    <div className="icon-wrap" style={{display: "inline-block"}}>
+                                                        <i className={"wi " + getWeatherIconArrayValue(item.phenomenon)}/>
+                                                    </div>
+                                                    <div style={{display: "inline-block"}}>
+                                                        {item.phenomenon}
+                                                    </div>
                                                 </div>
                                             </td>
                                             <td>{item.visibility}</td>
@@ -303,13 +482,11 @@ class App extends Component {
                                 })}
                                 <tr>
                                     <td>
-                                        TODO
+                                        <b>AVERAGES</b>
                                     </td>
                                 </tr>
                                 </tbody>
                             </Table>
-                            <i className="pi pi-globe"></i>
-                            <i className="pi pi-globe" style={{fontSize: "3em", display: "inline", float: "right"}}></i>
                         </div>
                     </div>
                 </div>

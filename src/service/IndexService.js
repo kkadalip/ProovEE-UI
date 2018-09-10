@@ -1,6 +1,6 @@
 import axios from "axios/index";
 
-export class WeatherService {
+export class IndexService {
     static getData() {
         return axios.get('http://localhost:8090/stations')
             .then(res => res.data[0]).catch((err) => {
