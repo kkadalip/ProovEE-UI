@@ -189,7 +189,7 @@ class App extends Component {
             "Clear": {day: "wi-day-sunny", neutral: "wi-na", night: "wi-na"},
             "Few clouds": {day: "wi-day-cloudy", neutral: "wi-na", night: "wi-na"},
             "Variable clouds": {day: "wi-cloud-refresh", neutral: "wi-cloud-refresh", night: "wi-cloud-refresh"},
-            "Cloudy with clear spells": {day: "wi-na", neutral: "wi-na", night: "wi-na"},
+            "Cloudy with clear spells": {day: "wi-day-cloudy-high", neutral: "wi-day-cloudy-high", night: "wi-night-alt-cloudy-high"},
             "Overcast": {day: "wi-day-sunny-overcast", neutral: "wi-cloudy", night: "wi-night-alt-cloudy"},
             "Light snow shower": {day: "wi-na", neutral: "wi-na", night: "wi-na"},
             "Moderate snow shower": {day: "wi-na", neutral: "wi-na", night: "wi-na"},
