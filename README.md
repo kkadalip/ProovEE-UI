@@ -2,12 +2,17 @@
 
 ## Building the application
 
-TODO
+$ npm run-script build
 
 ## Starting the application
 
-TODO
+$ npm start
 
+OR
+
+$ npm install -g serve
+
+$ serve -s build
 
 ### Environment variables
 

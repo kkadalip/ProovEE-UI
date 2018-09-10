@@ -12,8 +12,9 @@ import {SelectButton} from 'primereact/selectbutton';
 import {TabMenu} from 'primereact/tabmenu';
 import {translate} from 'react-i18next';
 import i18n from './translations/i18n';
+import {Table} from 'reactstrap';
 
-const debug = false;
+const debug = true;
 
 function getTabs() {
     return [
@@ -24,24 +25,47 @@ function getTabs() {
         {label: i18n.t('tabs.settings'), icon: 'pi pi-fw pi-cog', disabled: "true"}];
 }
 
+function getStations(value) {
+    if (value === undefined) {
+        return [];
+    }
+    return value.stations;
+}
+
+function getStatistics(value) {
+    if (value === undefined) {
+        return [];
+    }
+    return value.statistics;
+}
+
+function getStatisticsFromState() {
+    if (this === undefined || this.state === undefined || this.state.statistics === undefined) {
+        return [];
+    }
+    console.log("LALALA " + JSON.stringify(this.state.statistics));
+    return this.state.statistics;
+}
+
 class App extends Component {
     constructor(props) {
         super(props);
 
         const lng = localStorage.getItem('SelectedLanguage') || 'en';
         i18n.changeLanguage(lng);
-        
+
         console.log("i18n language is " + i18n.language);
         this.state = {
             loading: true,
-            data: [],
+            stations: [],
+            statistics: [],
             tabs: getTabs()
         };
         translate.setI18n(i18n);
     }
 
     componentDidMount() {
-        WeatherService.getStations().then(data => this.setState({loading: false, stations: data}));
+        WeatherService.getData().then(data => this.setState({loading: false, stations: getStations(data), statistics: getStatistics(data)}));
     }
 
     render() {
@@ -88,7 +112,9 @@ class App extends Component {
             <ColumnGroup>
                 <Row>
                     <Column footer="Averages:" colSpan={1}/>
-                    <Column footer="TODO" colSpan={20}/>
+                    <Column footer="" colSpan={2}/>
+                    <Column footer="" colSpan={2}/>
+                    <Column footer="" colSpan={16}/>
                 </Row>
             </ColumnGroup>;
 
@@ -118,34 +144,40 @@ class App extends Component {
                 <Column key={'windChillMaxF'} field={'windChillMaxF'}/>
             </DataTable>;
 
+        function getWeatherIconArrayValue(value) {
+            if (value !== undefined && weatherIconArray[value] !== undefined) {
+                return weatherIconArray[value].day;
+            }
+        }
+
         const weatherIconArray = {
-            "Clear": ["wi-day-sunny", "wi-na", "wi-na"],
-            "Few clouds": ["wi-day-cloudy", "wi-na", "wi-na"],
-            "Variable clouds": ["wi-cloud-refresh", "wi-cloud-refresh", "wi-cloud-refresh"],
-            "Cloudy with clear spells": "",
-            "Overcast": ["wi-day-sunny-overcast", "wi-cloudy", "wi-night-alt-cloudy"],
-            "Light snow shower": ["wi-na", "wi-na", "wi-na"],
-            "Moderate snow shower": ["wi-na", "wi-na", "wi-na"],
-            "Heavy snow shower": ["wi-na", "wi-na", "wi-na"],
-            "Light shower": ["wi-na", "wi-na", "wi-na"],
-            "Moderate shower": ["wi-na", "wi-na", "wi-na"],
-            "Heavy shower": ["wi-na", "wi-na", "wi-na"],
-            "Light rain": ["wi-raindrop", "wi-raindrop", "wi-raindrop"],
-            "Moderate rain": ["wi-raindrops", "wi-raindrops", "wi-raindrops"],
-            "Heavy rain": ["wi-rain", "wi-rain", "wi-rain"],
-            "Glaze": ["wi-na", "wi-na", "wi-na"],
-            "Light sleet": ["wi-day-sleet", "wi-sleet", "wi-night-alt-sleet"],
-            "Moderate sleet": ["wi-na", "wi-na", "wi-na"],
-            "Light snowfall": ["wi-na", "wi-na", "wi-na"],
-            "Moderate snowfall": ["wi-na", "wi-na", "wi-na"],
-            "Heavy snowfall": ["wi-na", "wi-na", "wi-na"],
-            "Blowing snow": ["wi-na", "wi-na", "wi-na"],
-            "Drifting snow": ["wi-na", "wi-na", "wi-na"],
-            "Hail": ["wi-day-hail", "wi-hail", "wi-night-alt-hail"],
-            "Mist": ["wi-day-fog", "wi-fog", "wi-night-fog"],
-            "Fog": ["wi-day-fog", "wi-fog", "wi-night-fog"],
-            "Thunder": ["wi-day-lightning", "wi-lightning", "wi-night-alt-lightning"],
-            "Thunderstorm": ["wi-day-thunderstorm", "wi-thunderstorm", "wi-night-alt-thunderstorm"]
+            "Clear": {day: "wi-day-sunny", neutral: "wi-na", night: "wi-na"},
+            "Few clouds": {day: "wi-day-cloudy", neutral: "wi-na", night: "wi-na"},
+            "Variable clouds": {day: "wi-cloud-refresh", neutral: "wi-cloud-refresh", night: "wi-cloud-refresh"},
+            "Cloudy with clear spells": {day: "wi-na", neutral: "wi-na", night: "wi-na"},
+            "Overcast": {day: "wi-day-sunny-overcast", neutral: "wi-cloudy", night: "wi-night-alt-cloudy"},
+            "Light snow shower": {day: "wi-na", neutral: "wi-na", night: "wi-na"},
+            "Moderate snow shower": {day: "wi-na", neutral: "wi-na", night: "wi-na"},
+            "Heavy snow shower": {day: "wi-na", neutral: "wi-na", night: "wi-na"},
+            "Light shower": {day: "wi-na", neutral: "wi-na", night: "wi-na"},
+            "Moderate shower": {day: "wi-na", neutral: "wi-na", night: "wi-na"},
+            "Heavy shower": {day: "wi-na", neutral: "wi-na", night: "wi-na"},
+            "Light rain": {day: "wi-raindrop", neutral: "wi-raindrop", night: "wi-raindrop"},
+            "Moderate rain": {day: "wi-raindrops", neutral: "wi-raindrops", night: "wi-raindrops"},
+            "Heavy rain": {day: "wi-rain", neutral: "wi-rain", night: "wi-rain"},
+            "Glaze": {day: "wi-na", neutral: "wi-na", night: "wi-na"},
+            "Light sleet": {day: "wi-day-sleet", neutral: "wi-sleet", night: "wi-night-alt-sleet"},
+            "Moderate sleet": {day: "wi-na", neutral: "wi-na", night: "wi-na"},
+            "Light snowfall": {day: "wi-na", neutral: "wi-na", night: "wi-na"},
+            "Moderate snowfall": {day: "wi-na", neutral: "wi-na", night: "wi-na"},
+            "Heavy snowfall": {day: "wi-na", neutral: "wi-na", night: "wi-na"},
+            "Blowing snow": {day: "wi-na", neutral: "wi-na", night: "wi-na"},
+            "Drifting snow": {day: "wi-na", neutral: "wi-na", night: "wi-na"},
+            "Hail": {day: "wi-day-hail", neutral: "wi-hail", night: "wi-night-alt-hail"},
+            "Mist": {day: "wi-day-fog", neutral: "wi-fog", night: "wi-night-fog"},
+            "Fog": {day: "wi-day-fog", neutral: "wi-fog", night: "wi-night-fog"},
+            "Thunder": {day: "wi-day-lightning", neutral: "wi-lightning", night: "wi-night-alt-lightning"},
+            "Thunderstorm": {day: "wi-day-thunderstorm", neutral: "wi-thunderstorm", night: "wi-night-alt-thunderstorm"}
         };
         if (debug) {
             for (const key in weatherIconArray) {
@@ -177,6 +209,107 @@ class App extends Component {
                         </div>
                         <div hidden={isLoading}>
                             {dataTable}
+                        </div>
+
+                        <br/>
+                        <h2>Average values:</h2>
+                        <table>
+                            <thead>
+                            <tr>
+                                <td>Visibility</td>
+                                <td>Air pressure</td>
+                                <td>Humidity</td>
+                                <td>Air temperature</td>
+                                <td>Wind direction</td>
+                                <td>Wind speed</td>
+                                <td>Water level</td>
+                                <td>Wind chill (C)</td>
+                                <td>Wind chill max (C)</td>
+                                <td>Wind chill (F)</td>
+                                <td>Wind chill max (F)</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {getStatisticsFromState().map(function (item, key) {
+                                return (
+                                    <tr key={key}>
+                                        <td>{key} {item}</td>
+                                    </tr>
+                                )
+                            })}
+                            </tbody>
+                        </table>
+                        <br/>
+                        <h1>ReactStrap:</h1>
+                        <div>
+                            <Table>
+                                <thead style={{fontWeight: "bolder"}}>
+                                <tr>
+                                    <td>{t('station.full.name')}</td>
+                                    <td>{t('station.full.longitude')}</td>
+                                    <td>{t('station.full.latitude')}</td>
+                                    <td>{t('station.full.phenomenon')}</td>
+                                    <td>{t('station.full.visibility')}</td>
+                                    <td>{t('station.full.precipitations')}</td>
+                                    <td>{t('station.full.uvIndex')}</td>
+                                    <td>{t('station.full.wmoCode')}</td>
+                                    <td>{t('station.full.airPressure')}</td>
+                                    <td>{t('station.full.relativeHumidity')}</td>
+                                    <td>{t('station.full.airTemperature')}</td>
+                                    <td>{t('station.full.waterLevel')}</td>
+                                    <td>{t('station.full.waterLevelEh2000')}</td>
+                                    <td>{t('station.full.waterTemperature')}</td>
+                                    <td>{t('station.full.windDirection')}</td>
+                                    <td>{t('station.full.windSpeed')}</td>
+                                    <td>{t('station.full.windSpeedMax')}</td>
+                                    <td>{t('station.full.windChillC')}</td>
+                                    <td>{t('station.full.windChillF')}</td>
+                                    <td>{t('station.full.windChillMaxC')}</td>
+                                    <td>{t('station.full.windChillMaxF')}</td>
+                                </tr>
+
+                                </thead>
+                                <tbody>
+                                {this.state.stations.map(function (item, key) {
+                                    return (
+                                        <tr key={key}>
+                                            <td>{item.name}</td>
+                                            <td>{item.longitude}</td>
+                                            <td>{item.latitude}</td>
+                                            <td>
+                                                <div>
+                                                    <i className={"pi " + getWeatherIconArrayValue(item.phenomenon) + "::before"}></i>{item.phenomenon}
+                                                </div>
+                                            </td>
+                                            <td>{item.visibility}</td>
+                                            <td>{item.precipitations}</td>
+                                            <td>{item.uvIndex}</td>
+                                            <td>{item.wmoCode}</td>
+                                            <td>{item.airPressure}</td>
+                                            <td>{item.relativeHumidity}</td>
+                                            <td>{item.airTemperature}</td>
+                                            <td>{item.waterLevel}</td>
+                                            <td>{item.waterLevelEh2000}</td>
+                                            <td>{item.waterTemperature}</td>
+                                            <td>{item.windDirection}</td>
+                                            <td>{item.windSpeed}</td>
+                                            <td>{item.windSpeedMax}</td>
+                                            <td>{item.windChillC}</td>
+                                            <td>{item.windChillF}</td>
+                                            <td>{item.windChillMaxC}</td>
+                                            <td>{item.windChillMaxF}</td>
+                                        </tr>
+                                    )
+                                })}
+                                <tr>
+                                    <td>
+                                        TODO
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </Table>
+                            <i className="pi pi-globe"></i>
+                            <i className="pi pi-globe" style={{fontSize: "3em", display: "inline", float: "right"}}></i>
                         </div>
                     </div>
                 </div>
