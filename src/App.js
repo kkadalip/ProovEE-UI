@@ -14,54 +14,9 @@ import {translate} from 'react-i18next';
 import i18n from './translations/i18n';
 import {Table} from 'reactstrap';
 import 'react-icons-weather/lib/css/weather-icons.css';
+import 'service/IndexHelper'
 
 const debug = false;
-
-function getTabs() {
-    return [
-        {label: i18n.t('tabs.home'), icon: 'pi pi-fw pi-home'},
-        {label: i18n.t('tabs.maps'), icon: 'pi pi-fw pi-globe', disabled: "true"},
-        {label: i18n.t('tabs.statistics'), icon: 'pi pi-fw pi-pencil', disabled: "true"},
-        {label: i18n.t('tabs.info'), icon: 'pi pi-fw pi-info', disabled: "true"},
-        {label: i18n.t('tabs.settings'), icon: 'pi pi-fw pi-cog', disabled: "true"}];
-}
-
-function getStations(value) {
-    if (value === undefined) {
-        return [];
-    }
-    return value.stations;
-}
-
-function getStatistics(value) {
-    if (value === undefined) {
-        return [];
-    }
-    //console.log("getStatistics value is: " + JSON.stringify(value));
-    //console.log("getStatistics result " + JSON.stringify(value['statistics']));
-    return value['statistics']; // value.statistics;
-}
-
-function getTimestamp(value) {
-    if (value === undefined) {
-        return [];
-    }
-    return value['timestamp'];
-}
-
-function getStatisticsVisibility(value) {
-    if (value === undefined) {
-        return [];
-    }
-    return value['statistics']['visibility'];
-}
-
-function getStatisticsAirPressure(value) {
-    if (value === undefined) {
-        return [];
-    }
-    console.log("getStatisticsAirPressure result " + JSON.stringify(value['statistics']['airPressure']));
-}
 
 class App extends Component {
     constructor(props) {
@@ -105,11 +60,10 @@ class App extends Component {
         IndexService.getData().then(data => this.setState({
             loading: false,
             stations: getStations(data),
-            statistics: getStatistics(data), // getStatistics(data)
+            statistics: getStatistics(data),
             visibility: getStatisticsVisibility(data),
-            timestamp:  getTimestamp(data)
+            timestamp: getTimestamp(data)
         })).then(data => getStatisticsAirPressure(data));
-
     }
 
     render() {
@@ -187,45 +141,6 @@ class App extends Component {
                 <Column key={'windChillMaxC'} field={'windChillMaxC'}/>
                 <Column key={'windChillMaxF'} field={'windChillMaxF'}/>
             </DataTable>;
-
-        function getWeatherIconArrayValue(value) {
-            if (value !== undefined && weatherIconArray[value] !== undefined) {
-                return weatherIconArray[value].day;
-            }
-        }
-        
-        const weatherIconArray = {
-            "Clear": {day: "wi-day-sunny", neutral: "wi-na", night: "wi-na"},
-            "Few clouds": {day: "wi-day-cloudy", neutral: "wi-na", night: "wi-na"},
-            "Variable clouds": {day: "wi-cloud-refresh", neutral: "wi-cloud-refresh", night: "wi-cloud-refresh"},
-            "Cloudy with clear spells": {day: "wi-day-cloudy-high", neutral: "wi-day-cloudy-high", night: "wi-night-alt-cloudy-high"},
-            "Overcast": {day: "wi-day-sunny-overcast", neutral: "wi-cloudy", night: "wi-night-alt-cloudy"},
-            "Light snow shower": {day: "wi-na", neutral: "wi-na", night: "wi-na"},
-            "Moderate snow shower": {day: "wi-na", neutral: "wi-na", night: "wi-na"},
-            "Heavy snow shower": {day: "wi-na", neutral: "wi-na", night: "wi-na"},
-
-            "Light shower": {day: "wi-day-sprinkle", neutral: "wi-raindrop", night: "wi-night-alt-sprinkle"},
-            "Moderate shower": {day: "wi-day-showers", neutral: "wi-raindrops", night: "wi-night-alt-showers"},
-            "Heavy shower": {day: "wi-day-rain", neutral: "wi-rain", night: "wi-night-alt-rain"},
-
-            "Light rain": {day: "wi-day-sprinkle", neutral: "wi-raindrop", night: "wi-night-alt-sprinkle"},
-            "Moderate rain": {day: "wi-day-showers", neutral: "wi-raindrops", night: "wi-night-alt-showers"},
-            "Heavy rain": {day: "wi-rain", neutral: "wi-rain", night: "wi-rain"},
-
-            "Glaze": {day: "wi-na", neutral: "wi-na", night: "wi-na"},
-            "Light sleet": {day: "wi-day-sleet", neutral: "wi-sleet", night: "wi-night-alt-sleet"},
-            "Moderate sleet": {day: "wi-na", neutral: "wi-na", night: "wi-na"},
-            "Light snowfall": {day: "wi-na", neutral: "wi-na", night: "wi-na"},
-            "Moderate snowfall": {day: "wi-na", neutral: "wi-na", night: "wi-na"},
-            "Heavy snowfall": {day: "wi-na", neutral: "wi-na", night: "wi-na"},
-            "Blowing snow": {day: "wi-na", neutral: "wi-na", night: "wi-na"},
-            "Drifting snow": {day: "wi-na", neutral: "wi-na", night: "wi-na"},
-            "Hail": {day: "wi-day-hail", neutral: "wi-hail", night: "wi-night-alt-hail"},
-            "Mist": {day: "wi-day-fog", neutral: "wi-fog", night: "wi-night-fog"},
-            "Fog": {day: "wi-day-fog", neutral: "wi-fog", night: "wi-night-fog"},
-            "Thunder": {day: "wi-day-lightning", neutral: "wi-lightning", night: "wi-night-alt-lightning"},
-            "Thunderstorm": {day: "wi-day-thunderstorm", neutral: "wi-thunderstorm", night: "wi-night-alt-thunderstorm"}
-        };
         if (debug) {
             for (const key in weatherIconArray) {
                 console.log("key " + key + " DAY: " + weatherIconArray[key][0] + " NEUTRAL: " + weatherIconArray[key][1] + " NIGHT: " + weatherIconArray[key][2]);
@@ -257,45 +172,6 @@ class App extends Component {
         let windChillF = stats['windChillF'];
         let windChillMaxC = stats['windChillMaxC'];
         let windChillMaxF = stats['windChillMaxF'];
-
-        function getMin(obj) {
-            if (obj !== undefined) {
-                return obj.min;
-            }
-        }
-
-        function getMax(obj) {
-            if (obj !== undefined) {
-                return obj.max;
-            }
-        }
-
-        function getAvg(obj) {
-            if (obj !== undefined) {
-                return obj.average;
-            }
-        }
-
-        function getCount(obj) {
-            if (obj !== undefined) {
-                return obj.count;
-            }
-        }
-
-        function getWindChillDisplay(windChill, windChillMax, unit) {
-            return format(windChill, windChill + unit + " (" + windChillMax + unit + ")");
-        }
-
-        function formatData(title, val, unit) {
-            return format(val, <span><span>{title}:&nbsp;<b>{val}</b>{unit}</span><br/></span>);
-        }
-
-        function format(val, res) {
-            if (val === undefined || val === null) {
-                return "";
-            }
-            return res;
-        }
 
         let dataTableReactStrap =
             <Table hover bordered={false} size={"sm"} striped={true} responsive={true} style={{textAlign: "left"}}>
@@ -339,7 +215,7 @@ class App extends Component {
                             <td>
                                 {formatData(t('station.min.waterLevel'), item.waterLevel, "mm")}
                                 {formatData(t('station.min.waterLevelEh2000'), item.waterLevelEh2000, "mm")}
-                                {formatData(t('generic.temp'), item.waterTemperature, "°C")}Statistiline keskmine
+                                {formatData(t('generic.temp'), item.waterTemperature, "°C")}
                             </td>
                             <td>
                                 {formatData(t('station.min.windDirection'), item.windDirection, "°")}
