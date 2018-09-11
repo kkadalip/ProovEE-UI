@@ -1,3 +1,4 @@
+import React from 'react';
 import i18n from "../translations/i18n";
 
 export function getTabs() {
@@ -51,7 +52,7 @@ export function getWeatherIconArrayValue(value) {
     }
 }
 
-const weatherIconArray = {
+export const weatherIconArray = {
     "Clear": {day: "wi-day-sunny", neutral: "wi-na", night: "wi-na"},
     "Few clouds": {day: "wi-day-cloudy", neutral: "wi-na", night: "wi-na"},
     "Variable clouds": {day: "wi-cloud-refresh", neutral: "wi-cloud-refresh", night: "wi-cloud-refresh"},
@@ -122,4 +123,12 @@ export function format(val, res) {
         return "";
     }
     return res;
+}
+
+export function convertTimestampToDate(unix_timestamp) {
+    const date = new Date(unix_timestamp * 1000);
+    const hours = date.getHours();
+    const minutes = "0" + date.getMinutes();
+    const seconds = "0" + date.getSeconds();
+    return hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2); // <- Will display time in 10:30:23 format
 }

@@ -14,7 +14,7 @@ import {translate} from 'react-i18next';
 import i18n from './translations/i18n';
 import {Table} from 'reactstrap';
 import 'react-icons-weather/lib/css/weather-icons.css';
-import 'service/IndexHelper'
+import * as h from "./service/IndexHelper";
 
 const debug = false;
 
@@ -50,7 +50,7 @@ class App extends Component {
             },
             visibility: [],
             airPressure: [],
-            tabs: getTabs(),
+            tabs: h.getTabs(),
             timestamp: "",
         };
         translate.setI18n(i18n);
@@ -59,11 +59,11 @@ class App extends Component {
     componentDidMount() {
         IndexService.getData().then(data => this.setState({
             loading: false,
-            stations: getStations(data),
-            statistics: getStatistics(data),
-            visibility: getStatisticsVisibility(data),
-            timestamp: getTimestamp(data)
-        })).then(data => getStatisticsAirPressure(data));
+            stations: h.getStations(data),
+            statistics: h.getStatistics(data),
+            visibility: h.getStatisticsVisibility(data),
+            timestamp: h.getTimestamp(data)
+        })).then(data => h.getStatisticsAirPressure(data));
     }
 
     render() {
@@ -141,15 +141,10 @@ class App extends Component {
                 <Column key={'windChillMaxC'} field={'windChillMaxC'}/>
                 <Column key={'windChillMaxF'} field={'windChillMaxF'}/>
             </DataTable>;
-        if (debug) {
-            for (const key in weatherIconArray) {
-                console.log("key " + key + " DAY: " + weatherIconArray[key][0] + " NEUTRAL: " + weatherIconArray[key][1] + " NIGHT: " + weatherIconArray[key][2]);
-            }
-        }
         const {t, i18n} = this.props;
         const changeLanguage = (lng) => {
             i18n.changeLanguage(lng);
-            this.setState({tabs: getTabs()});
+            this.setState({tabs: h.getTabs()});
             localStorage.setItem('SelectedLanguage', lng);
         };
         const langSelectItems = [
@@ -199,32 +194,32 @@ class App extends Component {
                                     {item.phenomenon}
                                 </div>
                                 <div className="icon-wrap" style={{display: "inline-block"}}>
-                                    <i className={"wi " + getWeatherIconArrayValue(item.phenomenon)}/>
+                                    <i className={"wi " + h.getWeatherIconArrayValue(item.phenomenon)}/>
                                 </div>
                             </td>
                             <td>
-                                {formatData(t('station.min.visibility'), item.visibility, "km")}
-                                {formatData(t('station.min.precipitations'), item.precipitations, "mm")}
-                                {formatData(t('station.min.uvIndex'), item.uvIndex, "")}
+                                {h.formatData(t('station.min.visibility'), item.visibility, "km")}
+                                {h.formatData(t('station.min.precipitations'), item.precipitations, "mm")}
+                                {h.formatData(t('station.min.uvIndex'), item.uvIndex, "")}
                             </td>
                             <td>
-                                {formatData(t('generic.pressure'), item.airPressure, "hPa")}
-                                {formatData(t('generic.humidity'), item.relativeHumidity, "%")}
-                                {formatData(t('generic.temp'), item.airTemperature, "°C")}
+                                {h.formatData(t('generic.pressure'), item.airPressure, "hPa")}
+                                {h.formatData(t('generic.humidity'), item.relativeHumidity, "%")}
+                                {h.formatData(t('generic.temp'), item.airTemperature, "°C")}
                             </td>
                             <td>
-                                {formatData(t('station.min.waterLevel'), item.waterLevel, "mm")}
-                                {formatData(t('station.min.waterLevelEh2000'), item.waterLevelEh2000, "mm")}
-                                {formatData(t('generic.temp'), item.waterTemperature, "°C")}
+                                {h.formatData(t('station.min.waterLevel'), item.waterLevel, "mm")}
+                                {h.formatData(t('station.min.waterLevelEh2000'), item.waterLevelEh2000, "mm")}
+                                {h.formatData(t('generic.temp'), item.waterTemperature, "°C")}
                             </td>
                             <td>
-                                {formatData(t('station.min.windDirection'), item.windDirection, "°")}
-                                {formatData(t('station.min.windSpeed'), item.windSpeed, "m/s")}
-                                {formatData(t('station.min.windSpeed') + " (MAX)", item.windSpeedMax, "m/s")}
+                                {h.formatData(t('station.min.windDirection'), item.windDirection, "°")}
+                                {h.formatData(t('station.min.windSpeed'), item.windSpeed, "m/s")}
+                                {h.formatData(t('station.min.windSpeed') + " (MAX)", item.windSpeedMax, "m/s")}
                             </td>
                             <td>
-                                {getWindChillDisplay(item.windChillC, item.windChillMaxC, "°C")}<br/>
-                                {getWindChillDisplay(item.windChillF, item.windChillMaxF, "F")}
+                                {h.getWindChillDisplay(item.windChillC, item.windChillMaxC, "°C")}<br/>
+                                {h.getWindChillDisplay(item.windChillF, item.windChillMaxF, "F")}
                             </td>
                         </tr>
                     )
@@ -256,75 +251,75 @@ class App extends Component {
                 <tbody>
                 <tr>
                     <td><b>{t('generic.min')}</b></td>
-                    <td>{getMin(visibility)}</td>
-                    <td>{getMin(uvIndex)}</td>
-                    <td>{getMin(airPressure)}</td>
-                    <td>{getMin(humidity)}</td>
-                    <td>{getMin(airTemp)}</td>
-                    <td>{getMin(windDir)}</td>
-                    <td>{getMin(windSpeed)}</td>
-                    <td>{getMin(windSpeedMax)}</td>
-                    <td>{getMin(waterLevel)}</td>
-                    <td>{getMin(waterLevelEH2000)}</td>
-                    <td>{getMin(waterTemp)}</td>
-                    <td>{getMin(windChillC)}</td>
-                    <td>{getMin(windChillF)}</td>
-                    <td>{getMin(windChillMaxC)}</td>
-                    <td>{getMin(windChillMaxF)}</td>
+                    <td>{h.getMin(visibility)}</td>
+                    <td>{h.getMin(uvIndex)}</td>
+                    <td>{h.getMin(airPressure)}</td>
+                    <td>{h.getMin(humidity)}</td>
+                    <td>{h.getMin(airTemp)}</td>
+                    <td>{h.getMin(windDir)}</td>
+                    <td>{h.getMin(windSpeed)}</td>
+                    <td>{h.getMin(windSpeedMax)}</td>
+                    <td>{h.getMin(waterLevel)}</td>
+                    <td>{h.getMin(waterLevelEH2000)}</td>
+                    <td>{h.getMin(waterTemp)}</td>
+                    <td>{h.getMin(windChillC)}</td>
+                    <td>{h.getMin(windChillF)}</td>
+                    <td>{h.getMin(windChillMaxC)}</td>
+                    <td>{h.getMin(windChillMaxF)}</td>
                 </tr>
                 <tr>
                     <td><b>{t('generic.max')}</b></td>
-                    <td>{getMax(visibility)}</td>
-                    <td>{getMax(uvIndex)}</td>
-                    <td>{getMax(airPressure)}</td>
-                    <td>{getMax(humidity)}</td>
-                    <td>{getMax(airTemp)}</td>
-                    <td>{getMax(windDir)}</td>
-                    <td>{getMax(windSpeed)}</td>
-                    <td>{getMax(windSpeedMax)}</td>
-                    <td>{getMax(waterLevel)}</td>
-                    <td>{getMax(waterLevelEH2000)}</td>
-                    <td>{getMax(waterTemp)}</td>
-                    <td>{getMax(windChillC)}</td>
-                    <td>{getMax(windChillF)}</td>
-                    <td>{getMax(windChillMaxC)}</td>
-                    <td>{getMax(windChillMaxF)}</td>
+                    <td>{h.getMax(visibility)}</td>
+                    <td>{h.getMax(uvIndex)}</td>
+                    <td>{h.getMax(airPressure)}</td>
+                    <td>{h.getMax(humidity)}</td>
+                    <td>{h.getMax(airTemp)}</td>
+                    <td>{h.getMax(windDir)}</td>
+                    <td>{h.getMax(windSpeed)}</td>
+                    <td>{h.getMax(windSpeedMax)}</td>
+                    <td>{h.getMax(waterLevel)}</td>
+                    <td>{h.getMax(waterLevelEH2000)}</td>
+                    <td>{h.getMax(waterTemp)}</td>
+                    <td>{h.getMax(windChillC)}</td>
+                    <td>{h.getMax(windChillF)}</td>
+                    <td>{h.getMax(windChillMaxC)}</td>
+                    <td>{h.getMax(windChillMaxF)}</td>
                 </tr>
                 <tr>
                     <td><b>{t('generic.average')}</b></td>
-                    <td>{getAvg(visibility)}</td>
-                    <td>{getAvg(uvIndex)}</td>
-                    <td>{getAvg(airPressure)}</td>
-                    <td>{getAvg(humidity)}</td>
-                    <td>{getAvg(airTemp)}</td>
-                    <td>{getAvg(windDir)}</td>
-                    <td>{getAvg(windSpeed)}</td>
-                    <td>{getAvg(windSpeedMax)}</td>
-                    <td>{getAvg(waterLevel)}</td>
-                    <td>{getAvg(waterLevelEH2000)}</td>
-                    <td>{getAvg(waterTemp)}</td>
-                    <td>{getAvg(windChillC)}</td>
-                    <td>{getAvg(windChillF)}</td>
-                    <td>{getAvg(windChillMaxC)}</td>
-                    <td>{getAvg(windChillMaxF)}</td>
+                    <td>{h.getAvg(visibility)}</td>
+                    <td>{h.getAvg(uvIndex)}</td>
+                    <td>{h.getAvg(airPressure)}</td>
+                    <td>{h.getAvg(humidity)}</td>
+                    <td>{h.getAvg(airTemp)}</td>
+                    <td>{h.getAvg(windDir)}</td>
+                    <td>{h.getAvg(windSpeed)}</td>
+                    <td>{h.getAvg(windSpeedMax)}</td>
+                    <td>{h.getAvg(waterLevel)}</td>
+                    <td>{h.getAvg(waterLevelEH2000)}</td>
+                    <td>{h.getAvg(waterTemp)}</td>
+                    <td>{h.getAvg(windChillC)}</td>
+                    <td>{h.getAvg(windChillF)}</td>
+                    <td>{h.getAvg(windChillMaxC)}</td>
+                    <td>{h.getAvg(windChillMaxF)}</td>
                 </tr>
                 <tr>
                     <td><b>{t('generic.count')}</b></td>
-                    <td>{getCount(visibility)}</td>
-                    <td>{getCount(uvIndex)}</td>
-                    <td>{getCount(airPressure)}</td>
-                    <td>{getCount(humidity)}</td>
-                    <td>{getCount(airTemp)}</td>
-                    <td>{getCount(windDir)}</td>
-                    <td>{getCount(windSpeed)}</td>
-                    <td>{getCount(windSpeedMax)}</td>
-                    <td>{getCount(waterLevel)}</td>
-                    <td>{getCount(waterLevelEH2000)}</td>
-                    <td>{getCount(waterTemp)}</td>
-                    <td>{getCount(windChillC)}</td>
-                    <td>{getCount(windChillF)}</td>
-                    <td>{getCount(windChillMaxC)}</td>
-                    <td>{getCount(windChillMaxF)}</td>
+                    <td>{h.getCount(visibility)}</td>
+                    <td>{h.getCount(uvIndex)}</td>
+                    <td>{h.getCount(airPressure)}</td>
+                    <td>{h.getCount(humidity)}</td>
+                    <td>{h.getCount(airTemp)}</td>
+                    <td>{h.getCount(windDir)}</td>
+                    <td>{h.getCount(windSpeed)}</td>
+                    <td>{h.getCount(windSpeedMax)}</td>
+                    <td>{h.getCount(waterLevel)}</td>
+                    <td>{h.getCount(waterLevelEH2000)}</td>
+                    <td>{h.getCount(waterTemp)}</td>
+                    <td>{h.getCount(windChillC)}</td>
+                    <td>{h.getCount(windChillF)}</td>
+                    <td>{h.getCount(windChillMaxC)}</td>
+                    <td>{h.getCount(windChillMaxF)}</td>
                 </tr>
                 </tbody>
             </Table>;
@@ -344,7 +339,7 @@ class App extends Component {
                         </div>
                         <div hidden={isLoading}>
                             <br/>
-                            <h2>{t('generic.dataset')} <b>{IndexService.convertTimestampToDate(this.state.timestamp)}</b>:</h2>
+                            <h2>{t('generic.dataset')} <b>{h.convertTimestampToDate(this.state.timestamp)}</b>:</h2>
                             {dataTablePrimeReact}
                             <br/>
                             <h2>{t('generic.averages')}:</h2>
