@@ -42,6 +42,13 @@ function getStatistics(value) {
     return value['statistics']; // value.statistics;
 }
 
+function getTimestamp(value) {
+    if (value === undefined) {
+        return [];
+    }
+    return value['timestamp'];
+}
+
 function getStatisticsVisibility(value) {
     if (value === undefined) {
         return [];
@@ -88,7 +95,8 @@ class App extends Component {
             },
             visibility: [],
             airPressure: [],
-            tabs: getTabs()
+            tabs: getTabs(),
+            timestamp: "",
         };
         translate.setI18n(i18n);
     }
@@ -98,7 +106,8 @@ class App extends Component {
             loading: false,
             stations: getStations(data),
             statistics: getStatistics(data), // getStatistics(data)
-            visibility: getStatisticsVisibility(data)
+            visibility: getStatisticsVisibility(data),
+            timestamp:  getTimestamp(data)
         })).then(data => getStatisticsAirPressure(data));
 
     }
@@ -184,7 +193,7 @@ class App extends Component {
                 return weatherIconArray[value].day;
             }
         }
-
+        
         const weatherIconArray = {
             "Clear": {day: "wi-day-sunny", neutral: "wi-na", night: "wi-na"},
             "Few clouds": {day: "wi-day-cloudy", neutral: "wi-na", night: "wi-na"},
@@ -194,12 +203,15 @@ class App extends Component {
             "Light snow shower": {day: "wi-na", neutral: "wi-na", night: "wi-na"},
             "Moderate snow shower": {day: "wi-na", neutral: "wi-na", night: "wi-na"},
             "Heavy snow shower": {day: "wi-na", neutral: "wi-na", night: "wi-na"},
-            "Light shower": {day: "wi-na", neutral: "wi-na", night: "wi-na"},
-            "Moderate shower": {day: "wi-na", neutral: "wi-na", night: "wi-na"},
-            "Heavy shower": {day: "wi-na", neutral: "wi-na", night: "wi-na"},
-            "Light rain": {day: "wi-raindrop", neutral: "wi-raindrop", night: "wi-raindrop"},
-            "Moderate rain": {day: "wi-raindrops", neutral: "wi-raindrops", night: "wi-raindrops"},
+
+            "Light shower": {day: "wi-day-sprinkle", neutral: "wi-raindrop", night: "wi-night-alt-sprinkle"},
+            "Moderate shower": {day: "wi-day-showers", neutral: "wi-raindrops", night: "wi-night-alt-showers"},
+            "Heavy shower": {day: "wi-day-rain", neutral: "wi-rain", night: "wi-night-alt-rain"},
+
+            "Light rain": {day: "wi-day-sprinkle", neutral: "wi-raindrop", night: "wi-night-alt-sprinkle"},
+            "Moderate rain": {day: "wi-day-showers", neutral: "wi-raindrops", night: "wi-night-alt-showers"},
             "Heavy rain": {day: "wi-rain", neutral: "wi-rain", night: "wi-rain"},
+
             "Glaze": {day: "wi-na", neutral: "wi-na", night: "wi-na"},
             "Light sleet": {day: "wi-day-sleet", neutral: "wi-sleet", night: "wi-night-alt-sleet"},
             "Moderate sleet": {day: "wi-na", neutral: "wi-na", night: "wi-na"},
@@ -456,7 +468,7 @@ class App extends Component {
                         </div>
                         <div hidden={isLoading}>
                             <br/>
-                            <h2>{t('generic.dataset')}:</h2>
+                            <h2>{t('generic.dataset')} <b>{IndexService.convertTimestampToDate(this.state.timestamp)}</b>:</h2>
                             {dataTablePrimeReact}
                             <br/>
                             <h2>{t('generic.averages')}:</h2>
