@@ -91,6 +91,12 @@
     "air": "Õhk",
     "water": "Vesi",
     "wind": "Tuul",
-    "weather": "Ilm"
+    "weather": "Ilm",
+    
+    "unit": "Ühik",
+    "min": "Miinimum",
+    "max": "Maksimum",
+    "average": "Keskmine",
+    "count": "Arv"
   }
 }

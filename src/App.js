@@ -327,9 +327,9 @@ class App extends Component {
                                 </div>
                             </td>
                             <td>
-                                {formatData(t('station.full.visibility'), item.visibility, "km")}
-                                {formatData(t('station.full.precipitations'), item.precipitations, "mm")}
-                                {formatData(t('station.full.uvIndex'), item.uvIndex, "")}
+                                {formatData(t('station.min.visibility'), item.visibility, "km")}
+                                {formatData(t('station.min.precipitations'), item.precipitations, "mm")}
+                                {formatData(t('station.min.uvIndex'), item.uvIndex, "")}
                             </td>
                             <td>
                                 {formatData(t('generic.pressure'), item.airPressure, "hPa")}
@@ -339,7 +339,7 @@ class App extends Component {
                             <td>
                                 {formatData(t('station.min.waterLevel'), item.waterLevel, "mm")}
                                 {formatData(t('station.min.waterLevelEh2000'), item.waterLevelEh2000, "mm")}
-                                {formatData(t('generic.temp'), item.waterTemperature, "°C")}
+                                {formatData(t('generic.temp'), item.waterTemperature, "°C")}Statistiline keskmine
                             </td>
                             <td>
                                 {formatData(t('station.min.windDirection'), item.windDirection, "°")}
@@ -356,10 +356,10 @@ class App extends Component {
                 </tbody>
             </Table>;
         let dataTableAveragesReactStrap =
-            <Table size={"sm"} striped={true} responsive={true}>
+            <Table size={"sm"} striped={true} responsive={true} style={{textAlign: "left"}}>
                 <thead>
                 <tr>
-                    <td><b>Unit</b></td>
+                    <td><b>{t('generic.unit')}</b></td>
                     <td>{t('station.full.visibility')}</td>
                     <td>{t('station.full.uvIndex')}</td>
                     <td>{t('station.full.airPressure')}</td>
@@ -379,7 +379,7 @@ class App extends Component {
                 </thead>
                 <tbody>
                 <tr>
-                    <td><b>Min</b></td>
+                    <td><b>{t('generic.min')}</b></td>
                     <td>{getMin(visibility)}</td>
                     <td>{getMin(uvIndex)}</td>
                     <td>{getMin(airPressure)}</td>
@@ -397,7 +397,7 @@ class App extends Component {
                     <td>{getMin(windChillMaxF)}</td>
                 </tr>
                 <tr>
-                    <td><b>Max</b></td>
+                    <td><b>{t('generic.max')}</b></td>
                     <td>{getMax(visibility)}</td>
                     <td>{getMax(uvIndex)}</td>
                     <td>{getMax(airPressure)}</td>
@@ -415,7 +415,7 @@ class App extends Component {
                     <td>{getMax(windChillMaxF)}</td>
                 </tr>
                 <tr>
-                    <td><b>Average</b></td>
+                    <td><b>{t('generic.average')}</b></td>
                     <td>{getAvg(visibility)}</td>
                     <td>{getAvg(uvIndex)}</td>
                     <td>{getAvg(airPressure)}</td>
@@ -433,7 +433,7 @@ class App extends Component {
                     <td>{getAvg(windChillMaxF)}</td>
                 </tr>
                 <tr>
-                    <td><b>Count</b></td>
+                    <td><b>{t('generic.count')}</b></td>
                     <td>{getCount(visibility)}</td>
                     <td>{getCount(uvIndex)}</td>
                     <td>{getCount(airPressure)}</td>
