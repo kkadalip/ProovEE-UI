@@ -175,6 +175,7 @@ class App extends Component {
                     <td>{t('station.full.name')}<br/>{t('station.full.wmoCode')}</td>
                     <td>{t('station.full.longitude')}<br/>{t('station.full.latitude')}</td>
                     <td>{t('station.full.phenomenon')}</td>
+                    <td/>
                     <td>{t('generic.weather')}</td>
                     <td>{t('generic.air')}</td>
                     <td>{t('generic.water')}</td>
@@ -191,9 +192,11 @@ class App extends Component {
                             <td>{item.longitude}<br/>{item.latitude}</td>
                             <td>
                                 <div style={{display: "inline-block"}}>
-                                    {item.phenomenon}
+                                    {h.getWeatherEnToEtArrayValue(item.phenomenon, i18n.language)}
                                 </div>
-                                <div className="icon-wrap" style={{display: "inline-block"}}>
+                            </td>
+                            <td>
+                                <div className="icon-wrap" style={{float: "left"}}>
                                     <i className={"wi " + h.getWeatherIconArrayValue(item.phenomenon)}/>
                                 </div>
                             </td>

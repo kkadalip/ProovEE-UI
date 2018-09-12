@@ -52,6 +52,16 @@ export function getWeatherIconArrayValue(value) {
     }
 }
 
+export function getWeatherEnToEtArrayValue(value, currentLanguage) {
+    if(currentLanguage !== 'et'){
+        return value;
+    }
+    if (value !== undefined && weatherEnToEtArray[value] !== undefined) {
+        return weatherEnToEtArray[value];
+    }
+    return value;
+}
+
 export const weatherIconArray = {
     "Clear": {day: "wi-day-sunny", neutral: "wi-na", night: "wi-na"},
     "Few clouds": {day: "wi-day-cloudy", neutral: "wi-na", night: "wi-na"},
@@ -61,15 +71,12 @@ export const weatherIconArray = {
     "Light snow shower": {day: "wi-na", neutral: "wi-na", night: "wi-na"},
     "Moderate snow shower": {day: "wi-na", neutral: "wi-na", night: "wi-na"},
     "Heavy snow shower": {day: "wi-na", neutral: "wi-na", night: "wi-na"},
-
     "Light shower": {day: "wi-day-sprinkle", neutral: "wi-raindrop", night: "wi-night-alt-sprinkle"},
     "Moderate shower": {day: "wi-day-showers", neutral: "wi-raindrops", night: "wi-night-alt-showers"},
     "Heavy shower": {day: "wi-day-rain", neutral: "wi-rain", night: "wi-night-alt-rain"},
-
     "Light rain": {day: "wi-day-sprinkle", neutral: "wi-raindrop", night: "wi-night-alt-sprinkle"},
     "Moderate rain": {day: "wi-day-showers", neutral: "wi-raindrops", night: "wi-night-alt-showers"},
     "Heavy rain": {day: "wi-rain", neutral: "wi-rain", night: "wi-rain"},
-
     "Glaze": {day: "wi-na", neutral: "wi-na", night: "wi-na"},
     "Light sleet": {day: "wi-day-sleet", neutral: "wi-sleet", night: "wi-night-alt-sleet"},
     "Moderate sleet": {day: "wi-na", neutral: "wi-na", night: "wi-na"},
@@ -83,6 +90,36 @@ export const weatherIconArray = {
     "Fog": {day: "wi-day-fog", neutral: "wi-fog", night: "wi-night-fog"},
     "Thunder": {day: "wi-day-lightning", neutral: "wi-lightning", night: "wi-night-alt-lightning"},
     "Thunderstorm": {day: "wi-day-thunderstorm", neutral: "wi-thunderstorm", night: "wi-night-alt-thunderstorm"}
+};
+
+export const weatherEnToEtArray = {
+    "Clear": "Selge",
+    "Few clouds": "Vähene pilvisus",
+    "Variable clouds": "Poolpilves",
+    "Cloudy with clear spells": "Peamiselt pilves",
+    "Overcast": "Pilves",
+    "Light snow shower": "Nõrk hooglumi",
+    "Moderate snow shower": "Mõõdukas hooglumi",
+    "Heavy snow shower": "Tugev hooglumi",
+    "Light shower": "Nõrk hoovihm",
+    "Moderate shower": "Mõõdukas hoovihm",
+    "Heavy shower": "Tugev hoovihm",
+    "Light rain": "Nõrk vihm",
+    "Moderate rain": "Mõõdukas vihm",
+    "Heavy rain": "Tugev vihm",
+    "Glaze": "Jäide",
+    "Light sleet": "Nõrk lörtsisadu",
+    "Moderate sleet": "Mõõdukas lörtsisadu",
+    "Light snowfall": "Nõrk lumesadu",
+    "Moderate snowfall": "Mõõdukas lumesadu",
+    "Heavy snowfall": "Tugev lumesadu",
+    "Blowing snow": "Üldtuisk",
+    "Drifting snow": "Pinnatuisk",
+    "Hail": "Rahe",
+    "Mist": "Uduvine",
+    "Fog": "Udu",
+    "Thunder": "Äike",
+    "Thunderstorm": "Äikesevihm"
 };
 
 
