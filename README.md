@@ -3,8 +3,11 @@
 ## Building the application
 
 Open command prompt, navigate to project root, for example:
+
 $ cd C:\Users\your.name\Desktop\ProovEE-UI
+
 $ npm install
+
 $ npm run-script build
 
 ## Starting the application
